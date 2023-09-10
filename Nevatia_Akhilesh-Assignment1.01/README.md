@@ -29,6 +29,8 @@ Code Highlights:
 - The final map is displayed in the console, visually representing the generated terrain.
 
 8. Usage:
-- To run the code, compile and execute the C program. The generated map will be displayed in the terminal.
+- To run the code, just type "make run" after going inside the folder
+- To remove executable type "make clean"
+- to only generate executable type "make", and sepeately see the map - "./PokeMap"
 
 
