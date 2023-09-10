@@ -105,6 +105,7 @@ struct CustomData dequeue(struct Queue* queue) {
 }
 
 // Function to check if the queue is empty
+
 int isEmpty(struct Queue* queue) {
     return queue->front == NULL;
 }
@@ -256,9 +257,9 @@ void printmap(){
         Mx++;
      }
 
-    // FILLING MAP UP WITH DIFFERENT TERRAINS USING CUSTOM MADE QUEUE
+// FILLING MAP UP WITH DIFFERENT TERRAINS USING CUSTOM MADE QUEUE
 
-     struct Queue* queue = createQueue();
+ struct Queue* queue = createQueue();
 
 // FILLING UP TALL GRASS
 
@@ -290,7 +291,7 @@ for(int i = 0 ; i < 2 ; i++){
 
     }
 
-    // PUTTING SHORT GRASS IN THE QUEUE AT 2 LOCATIONS 
+ // PUTTING SHORT GRASS IN THE QUEUE AT 2 LOCATIONS 
     for(int i = 0 ; i < 3 ; i++){
     int Ry = rand()%80;
     int Rx = rand()%21;
@@ -304,6 +305,7 @@ for(int i = 0 ; i < 2 ; i++){
 
     }
 
+// GOING THROUGH THE FILLED QUEUE AND EXPANDING REGIONS TILL OTHER REGION DISCOVERED
 
 
 while(!(isEmpty(queue))){
@@ -322,12 +324,12 @@ while(!(isEmpty(queue))){
 
 }
    
+//PRINTING BOARD FORMULATED 
 
-    //PRINTING BOARD FORMULATED 
     for(int i = 0 ; i < rows ; i++){
 
         for(int j = 0 ; j < cols ; j++){
-            // SWITCH TREE AND SHORT GRASS SYMBOLS AS SHORT GRASS WAS USED AS PLACE HOLDER IN CODE INITIALLY 
+            // SWITCH TREE AND SHORT GRASS SYMBOLS WITH TREE AS SHORT GRASS WAS USED AS PLACE HOLDER IN CODE INITIALLY 
            if(map[i][j]=='"'){
               //printf("%c",'.');
               printColoredChar('.');
