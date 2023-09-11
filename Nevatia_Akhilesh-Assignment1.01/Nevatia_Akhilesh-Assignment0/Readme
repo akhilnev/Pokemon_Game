@@ -1,0 +1,4 @@
+This Assignment performs edge detection on an image using Sobel filer!
+
+- Please use "make run" to generate and run the executable file
+- Please use "make clean" to remove generated images and generated executables
