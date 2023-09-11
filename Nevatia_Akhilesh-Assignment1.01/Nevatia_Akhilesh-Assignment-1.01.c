@@ -15,8 +15,8 @@ void printColoredChar(char character) {
         case '.': printf(COLOR_GREEN "%c" COLOR_RESET, character); break;
         case '#': printf(COLOR_BLUE "%c" COLOR_RESET, character); break;
         case ':': printf(COLOR_RED "%c" COLOR_RESET, character); break;
-        case '^': printf(COLOR_CYAN "%c" COLOR_RESET, character); break;
-        case '"': printf(COLOR_YELLOW "%c" COLOR_RESET, character); break;
+        case '~': printf(COLOR_CYAN "%c" COLOR_RESET, character); break;
+        case '^': printf(COLOR_YELLOW "%c" COLOR_RESET, character); break;
         case 'C': printf(COLOR_MAGENTA "%c" COLOR_RESET, character); break;
         case 'M': printf(COLOR_MAGENTA "%c" COLOR_RESET, character); break;
         default: printf("%c", character);
@@ -25,11 +25,11 @@ void printColoredChar(char character) {
 
 void printLegend() {
     printf("Legend:\n");
-    printf(COLOR_GREEN " . " COLOR_RESET ": Grass\n");
+    printf(COLOR_GREEN " . " COLOR_RESET ": Short Grass\n");
     printf(COLOR_BLUE " # " COLOR_RESET ": Road\n");
     printf(COLOR_RED " : " COLOR_RESET ": Tall Grass\n");
-    printf(COLOR_CYAN " ^ " COLOR_RESET ": Water\n");
-    printf(COLOR_YELLOW " \" " COLOR_RESET ": Short Grass\n");
+    printf(COLOR_CYAN " ~ " COLOR_RESET ": Water\n");
+    printf(COLOR_YELLOW " ^ " COLOR_RESET ": Tree \n");
     printf(COLOR_MAGENTA " C " COLOR_RESET ": Pokémon Center\n");
     printf(COLOR_MAGENTA " M " COLOR_RESET ": Pokémon Mart\n");
 }
@@ -286,7 +286,7 @@ for(int i = 0 ; i < 2 ; i++){
        Ry = rand()%80;
        Rx = rand()%21;
     }
-    struct CustomData data = {Rx,Ry,'^'};
+    struct CustomData data = {Rx,Ry,'~'};
     enqueue(queue,data);
 
     }
@@ -300,7 +300,7 @@ for(int i = 0 ; i < 2 ; i++){
        Ry = rand()%80;
        Rx = rand()%21;
     }
-    struct CustomData data = {Rx,Ry,'"'};
+    struct CustomData data = {Rx,Ry,'^'};
     enqueue(queue,data);
 
     }
@@ -330,12 +330,12 @@ while(!(isEmpty(queue))){
 
         for(int j = 0 ; j < cols ; j++){
             // SWITCH TREE AND SHORT GRASS SYMBOLS WITH TREE AS SHORT GRASS WAS USED AS PLACE HOLDER IN CODE INITIALLY 
-           if(map[i][j]=='"'){
-              //printf("%c",'.');
+           if(map[i][j]=='^'){
+              
               printColoredChar('.');
            }else if(map[i][j]=='.'){
-                //printf("%c",'"');
-                printColoredChar('"');
+                
+                printColoredChar('^');
            }else{
             printColoredChar(map[i][j]);
         }
