@@ -323,6 +323,21 @@ while(!(isEmpty(queue))){
     } 
 
 }
+
+ for(int i = 0 ; i < 10 ; i++){
+
+    int row = rand()%15+3;
+    int col = rand()%70 + 5;
+
+    if(map[row][col]!='#' && map[row][col]!='M' && map[row][col]!='C'){
+        map[row][col] = '%';
+    }
+
+}
+
+
+
+
    
 //PRINTING BOARD FORMULATED 
 
