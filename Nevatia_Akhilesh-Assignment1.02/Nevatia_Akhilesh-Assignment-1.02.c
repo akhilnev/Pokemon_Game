@@ -701,18 +701,14 @@ void MapToMap()
                 }
             }
         }
-        else if (userInput == 'q')
-        {
-            printf("Quitting.....");
-            // Add your processing code here
-        }else if(userInput == 's'){
+        else if(userInput == 's'){
 
             char **map = mapArray[currentMap.x][currentMap.y];
             // Go through the first row and find which row index was # assigned on
             int gateIndex = -1;
             for (int j = 0; j < 80; j++)
             {
-                if (map[79][j] == '#')
+                if (map[20][j] == '#')
                 {
                     gateIndex = j;
                     break;
@@ -755,6 +751,112 @@ void MapToMap()
                     printf("\n");
                 }
             }
+        }else if(userInput == 'e'){
+
+            char **map = mapArray[currentMap.x][currentMap.y];
+            // Go through the first row and find which row index was # assigned on
+            int gateIndex = -1;
+            for (int i = 0; i < 21; i++)
+            {
+                if (map[i][79] == '#')
+                {
+                    gateIndex = i;
+                    break;
+                }
+            }
+
+            // find appropriate row at which gate exists
+
+
+            updateY(&currentMap, currentMap.y + 1);
+            int x = currentMap.x;
+            int y = currentMap.y;
+
+
+            if (mapArray[x][y] == NULL)
+            {
+                mapArray[x][y] = printmap('w', gateIndex); // need to modify this to take in specific gate posiions to generate
+            }
+            else {
+
+                char **centralMap = mapArray[x][y];
+
+                for (int i = 0; i < 21; i++)
+                {
+                    for (int j = 0; j < 80; j++)
+                    {
+                        if (centralMap[i][j] == '^')
+                        {
+
+                            printColoredChar('.');
+                        }
+                        else if (centralMap[i][j] == '.')
+                        {
+
+                            printColoredChar('^');
+                        }
+                        else
+                        {
+                            printColoredChar(centralMap[i][j]);
+                        }
+                    }
+                    printf("\n");
+                }
+            }
+        }
+        else if(userInput == 'w'){
+
+            char **map = mapArray[currentMap.x][currentMap.y];
+            // Go through the first row and find which row index was # assigned on
+            int gateIndex = -1;
+            for (int i = 0; i < 21; i++)
+            {
+                if (map[i][0] == '#')
+                {
+                    gateIndex = i;
+                    break;
+                }
+            }
+
+            updateY(&currentMap, currentMap.y - 1);
+            int x = currentMap.x;
+            int y = currentMap.y;
+
+            if (mapArray[x][y] == NULL)
+            {
+                mapArray[x][y] = printmap('e', gateIndex); // need to modify this to take in specific gate posiions to generate
+            }
+            else {
+
+                char **centralMap = mapArray[x][y];
+
+                for (int i = 0; i < 21; i++)
+                {
+                    for (int j = 0; j < 80; j++)
+                    {
+                        if (centralMap[i][j] == '^')
+                        {
+
+                            printColoredChar('.');
+                        }
+                        else if (centralMap[i][j] == '.')
+                        {
+
+                            printColoredChar('^');
+                        }
+                        else
+                        {
+                            printColoredChar(centralMap[i][j]);
+                        }
+                    }
+                    printf("\n");
+                }
+            }
+
+
+        }
+        else if (userInput=='q'){
+            printf("#########QUITTING############\n");
         }
         else{
             printf("Please generate a valid input");
