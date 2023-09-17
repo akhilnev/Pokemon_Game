@@ -186,7 +186,7 @@ int isEmpty(struct Queue *queue)
     return queue->front == NULL;
 }
 
-char **printmap(char gate , int index)
+char **printmap(char gate, int index)
 {
 
     int rows = 21;
@@ -213,65 +213,211 @@ char **printmap(char gate , int index)
     }
 
     // PLACING ROADS FROM EAST TO WEST AND NORTH TO SOUTH
-    int dx[] = {0, 1};
-    int dy[] = {1, 0};
 
-    int Hstartx = rand() % 21;
-    int horzx = Hstartx;
-    int horzy = 0;
-    map[horzx][horzy] = '#';
-    horzy++; // initial step to get out of boulders
-    map[horzx][horzy] = '#';
-    // int Hstarty = rand()%80;
-
-    while (horzy != 79)
+    // PLACING ROADS FROM EAST TO WEST OR RANDOM BASED ON GATE VALUE
+    if (gate == 'w')
     {
-        int dirn = (rand() % 2); // as we only want to go ahead in terms of cols
-        if ((map[horzx + dx[dirn]][horzy + dy[dirn]]) != '%')
-        {
-            horzx += dx[dirn];
-            horzy += dy[dirn];
-            map[horzx][horzy] = '#';
-        }
-        else
-        {
-            horzy++;
-            map[horzx][horzy] = '#';
-        }
-    }
-    if (horzy == 79)
-    {
-        map[horzx][horzy] = '#'; // exitgate for horz path
-    }
 
-    int Hstarty = rand() % 80;
-    int verty = Hstarty;
-    int vertx = 0;
-    map[vertx][verty] = '#';
-    vertx++; // next line moving
-    map[vertx][verty] = '#';
+        int dx[] = {0, 1};
+        int dy[] = {1, 0};
 
-    int cx[] = {0, 1, 0};
-    int cy[] = {-1, 0, 1};
+        int Hstartx = index;
+        int horzx = Hstartx;
+        int horzy = 0;
+        map[horzx][horzy] = '#';
+        horzy++; // initial step to get out of boulders
+        map[horzx][horzy] = '#';
+        // int Hstarty = rand()%80;
 
-    while (vertx != 20)
-    {
-        int dirn = (rand() % 3); // as we only want to go ahead in terms of cols
-        if ((map[vertx + cx[dirn]][verty + cy[dirn]]) != '%')
+        while (horzy != 79)
         {
-            vertx += cx[dirn];
-            verty += cy[dirn];
-            map[vertx][verty] = '#';
+            int dirn = (rand() % 2); // as we only want to go ahead in terms of cols
+            if ((map[horzx + dx[dirn]][horzy + dy[dirn]]) != '%')
+            {
+                horzx += dx[dirn];
+                horzy += dy[dirn];
+                map[horzx][horzy] = '#';
+            }
+            else
+            {
+                horzy++;
+                map[horzx][horzy] = '#';
+            }
         }
-        else
+        if (horzy == 79)
         {
-            vertx++;
-            map[vertx][verty] = '#';
+            map[horzx][horzy] = '#'; // exitgate for horz path
         }
     }
-    if (vertx == 20)
+    else if (gate == 'e')
     {
-        map[vertx][verty] = '#'; // so that exit gate exists in the south side
+
+        int dx[] = {0, 1};
+        int dy[] = {-1, 0};
+
+        int Hstartx = index;
+        int horzx = Hstartx;
+        int horzy = 79;
+        map[horzx][horzy] = '#';
+        horzy--; // initial step to get out of boulders
+        map[horzx][horzy] = '#';
+        // int Hstarty = rand()%80;
+
+        while (horzy != 0)
+        {
+            int dirn = (rand() % 2); // as we only want to go ahead in terms of cols
+            if ((map[horzx + dx[dirn]][horzy + dy[dirn]]) != '%')
+            {
+                horzx += dx[dirn];
+                horzy += dy[dirn];
+                map[horzx][horzy] = '#';
+            }
+            else
+            {
+                horzy--;
+                map[horzx][horzy] = '#';
+            }
+        }
+        if (horzy == 0)
+        {
+            map[horzx][horzy] = '#'; // exitgate for horz path
+        }
+    }
+    else
+    {
+
+        int dx[] = {0, 1};
+        int dy[] = {1, 0};
+
+        int Hstartx = 1 + rand() % 19;
+        int horzx = Hstartx;
+        int horzy = 0;
+        map[horzx][horzy] = '#';
+        horzy++; // initial step to get out of boulders
+        map[horzx][horzy] = '#';
+        // int Hstarty = rand()%80;
+
+        while (horzy != 79)
+        {
+            int dirn = (rand() % 2); // as we only want to go ahead in terms of cols
+            if ((map[horzx + dx[dirn]][horzy + dy[dirn]]) != '%')
+            {
+                horzx += dx[dirn];
+                horzy += dy[dirn];
+                map[horzx][horzy] = '#';
+            }
+            else
+            {
+                horzy++;
+                map[horzx][horzy] = '#';
+            }
+        }
+        if (horzy == 79)
+        {
+            map[horzx][horzy] = '#'; // exitgate for horz path
+        }
+    }
+
+    if (gate == 'n')
+    {
+
+        int Hstarty = index;
+        int verty = Hstarty;
+        int vertx = 0;
+        map[vertx][verty] = '#';
+        vertx++; // next line moving
+        map[vertx][verty] = '#';
+
+        int cx[] = {0, 1, 0};
+        int cy[] = {-1, 0, 1};
+
+        while (vertx != 20)
+        {
+            int dirn = (rand() % 3); // as we only want to go ahead in terms of cols
+            if ((map[vertx + cx[dirn]][verty + cy[dirn]]) != '%')
+            {
+                vertx += cx[dirn];
+                verty += cy[dirn];
+                map[vertx][verty] = '#';
+            }
+            else
+            {
+                vertx++;
+                map[vertx][verty] = '#';
+            }
+        }
+        if (vertx == 20)
+        {
+            map[vertx][verty] = '#'; // so that exit gate exists in the south side
+        }
+    }
+    else if (gate == 's')
+    {
+
+        printf("hi");
+        int Hstarty = index;
+        int verty = Hstarty;
+        int vertx = 20; // last row go upi from there
+        map[vertx][verty] = '#';
+        vertx--; // next line moving
+        map[vertx][verty] = '#';
+
+        int cx[] = {0, -1, 0};
+        int cy[] = {-1, 0, 1};
+
+        while (vertx != 0)
+        {
+            int dirn = (rand() % 3); // as we only want to go ahead in terms of cols
+            if ((map[vertx + cx[dirn]][verty + cy[dirn]]) != '%')
+            {
+                vertx += cx[dirn];
+                verty += cy[dirn];
+                map[vertx][verty] = '#';
+            }
+            else
+            {
+                vertx--;
+                map[vertx][verty] = '#';
+            }
+        }
+        if (vertx == 0)
+        {
+            map[vertx][verty] = '#'; // so that exit gate exists in the south side
+        }
+    }
+    else
+    {
+
+        int Hstarty = 1 + rand() % 78;
+
+        int verty = Hstarty;
+        int vertx = 0;
+        map[vertx][verty] = '#';
+        vertx++; // next line moving
+        map[vertx][verty] = '#';
+
+        int cx[] = {0, 1, 0};
+        int cy[] = {-1, 0, 1};
+
+        while (vertx != 20)
+        {
+            int dirn = (rand() % 3); // as we only want to go ahead in terms of cols
+            if ((map[vertx + cx[dirn]][verty + cy[dirn]]) != '%')
+            {
+                vertx += cx[dirn];
+                verty += cy[dirn];
+                map[vertx][verty] = '#';
+            }
+            else
+            {
+                vertx++;
+                map[vertx][verty] = '#';
+            }
+        }
+        if (vertx == 20)
+        {
+            map[vertx][verty] = '#'; // so that exit gate exists in the south side
+        }
     }
 
     // ATTACHING POKEMON CENTERS TO THE ROADS
@@ -487,7 +633,7 @@ void MapToMap()
         for (int j = 0; j < 401; j++)
         {
             if (i == 200 && j == 200)
-                mapArray[i][j] = printmap(' ',-1); // 0, 0 in the map
+                mapArray[i][j] = printmap(' ', -1); // 0, 0 in the map
             else
                 mapArray[i][j] = NULL;
         }
@@ -508,10 +654,12 @@ void MapToMap()
         if (userInput == 'n')
         {
             char **map = mapArray[currentMap.x][currentMap.y];
-            //Go through the first row and find which row index was # assigned on 
+            // Go through the first row and find which row index was # assigned on
             int gateIndex = -1;
-            for(int j = 0 ; j < 80 ; j++){
-                if(map[0][j]=='#'){
+            for (int j = 0; j < 80; j++)
+            {
+                if (map[0][j] == '#')
+                {
                     gateIndex = j;
                     break;
                 }
@@ -523,7 +671,7 @@ void MapToMap()
             // gives the coordintes we want to store the pointer of
             if (mapArray[x][y] == NULL)
             {
-                mapArray[x][y] = printmap('s',gateIndex); // need to modify this to take in specific gate posiions to generate
+                mapArray[x][y] = printmap('s', gateIndex); // need to modify this to take in specific gate posiions to generate
             }
             else
             {
@@ -553,10 +701,63 @@ void MapToMap()
                 }
             }
         }
-        else if (userInput != 'q')
+        else if (userInput == 'q')
         {
-            printf("You entered: %c\n", userInput);
+            printf("Quitting.....");
             // Add your processing code here
+        }else if(userInput == 's'){
+
+            char **map = mapArray[currentMap.x][currentMap.y];
+            // Go through the first row and find which row index was # assigned on
+            int gateIndex = -1;
+            for (int j = 0; j < 80; j++)
+            {
+                if (map[79][j] == '#')
+                {
+                    gateIndex = j;
+                    break;
+                }
+            }
+
+            // stores last row's gate index to pass on
+
+            updateX(&currentMap, currentMap.x + 1);
+            int x = currentMap.x;
+            int y = currentMap.y;
+
+            if (mapArray[x][y] == NULL)
+            {
+                mapArray[x][y] = printmap('n', gateIndex); // need to modify this to take in specific gate posiions to generate
+            }
+            else {
+
+                char **centralMap = mapArray[x][y];
+
+                for (int i = 0; i < 21; i++)
+                {
+                    for (int j = 0; j < 80; j++)
+                    {
+                        if (centralMap[i][j] == '^')
+                        {
+
+                            printColoredChar('.');
+                        }
+                        else if (centralMap[i][j] == '.')
+                        {
+
+                            printColoredChar('^');
+                        }
+                        else
+                        {
+                            printColoredChar(centralMap[i][j]);
+                        }
+                    }
+                    printf("\n");
+                }
+            }
+        }
+        else{
+            printf("Please generate a valid input");
         }
     } while (userInput != 'q');
 
