@@ -703,6 +703,9 @@ void MapToMap()
         }
     }
 
+    printf("map x-coordinate : %d \n",0);
+    printf("map y-coordinate : %d \n ",0);
+
     // Stores co-ordingates of the starting map we are it using custom struct which we have defined
     CurrMap currentMap;
     currentMap.x = 200;
@@ -764,6 +767,9 @@ void MapToMap()
                     printf("\n");
                 }
             }
+
+            printf("map x-coordinate : %d \n",currentMap.x - 200);
+            printf("map y-coordinate : %d \n ",currentMap.y - 200);
         }
         else if (userInput == 's')
         {
@@ -817,6 +823,9 @@ void MapToMap()
                     printf("\n");
                 }
             }
+
+            printf("map x-coordinate : %d \n",currentMap.x - 200);
+            printf("map y-coordinate : %d \n ",currentMap.y - 200);
         }
         else if (userInput == 'e')
         {
@@ -870,6 +879,9 @@ void MapToMap()
                     printf("\n");
                 }
             }
+
+           printf("map x-coordinate : %d \n",currentMap.x - 200);
+            printf("map y-coordinate : %d \n ",currentMap.y - 200);
         }
         else if (userInput == 'w')
         {
@@ -921,6 +933,9 @@ void MapToMap()
                     printf("\n");
                 }
             }
+
+            printf("map x-coordinate : %d \n",currentMap.x - 200);
+            printf("map y-coordinate : %d \n ",currentMap.y - 200);
         }
         else if (userInput == 'f')
         {
@@ -969,6 +984,10 @@ void MapToMap()
                     printf("\n");
                 }
             }
+
+        printf("map x-coordinate : %d \n",currentMap.x - 200);
+        printf("map y-coordinate : %d \n ",currentMap.y - 200);
+        
         }
         else if (userInput == 'q')
         {
