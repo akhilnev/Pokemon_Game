@@ -1,0 +1,31 @@
+
+Commands:
+n: Move to the map immediately north of the current map and display it.
+s: Move to the map immediately south of the current map and display it.
+e: Move to the map immediately east of the current map and display it.
+w: Move to the map immediately west of the current map and display it.
+f x y: Fly to map (x, y) and display it.
+q: Quit the game.
+
+Boundary Handling:
+Movement commands that would cause the display to move off the edge of the world are ignored.
+Display the coordinates of the current map beneath the map itself at all times.
+
+Building Placement:
+The levels of wild-spawned Pokémon will be a function of the distance from the center.
+The frequency of Poké Marts and Pokémon Centers will decline as the player moves outwards from the center.
+Map Generation and Gates:
+Initially, all maps in the 401 × 401 array are NULL except for the center map at (200, 200).
+Gates are used to connect maps, and when generating adjacent maps, gates should match up appropriately.
+Map Storage and Revisiting:
+No map should be generated until it is visited.
+All visited maps should be saved so they can be revisited by going to the original coordinates.
+
+Edge Maps:
+Maps on the edges of the world should not have gates on their world-bordering edges.
+The suggested approach involves using a 401 × 401 array of pointers to maps. Initially, all maps are NULL except for the center map. When generating a new map, memory is dynamically allocated, and the pointer to the map is stored in the appropriate position in the array. To check for the existence of a map, one simply tests the corresponding pointer for NULL.
+
+Usage:
+- To run the code, just type "make run" after going inside the folder
+- To remove executable type "make clean"
+- to only generate executable type "make", and sepeately see the map - "./MaptoMap"

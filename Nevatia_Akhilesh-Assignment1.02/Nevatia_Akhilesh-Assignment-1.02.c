@@ -67,12 +67,12 @@ void updateX(CurrMap *currMap, int newX)
     if (newX < 0)
     {
         currMap->x = 0;
-        printf("Cannot move further up");
+        printf("Cannot move further up\n");
     }
     else if (newX > 400)
     {
         currMap->x = 400;
-        printf("Cannot move further down");
+        printf("Cannot move further down\n");
     }
     else
     {
@@ -86,12 +86,12 @@ void updateY(CurrMap *currMap, int newY)
     if (newY < 0)
     {
         currMap->y = 0;
-        printf("Cannot move further west");
+        printf("Cannot move further west\n");
     }
     else if (newY > 400)
     {
         currMap->y = 400;
-        printf("Cannot move further east");
+        printf("Cannot move further east\n");
     }
     else
     {
@@ -353,8 +353,6 @@ char **printmap(char gate, int index)
     }
     else if (gate == 's')
     {
-
-        printf("hi");
         int Hstarty = index;
         int verty = Hstarty;
         int vertx = 20; // last row go upi from there
@@ -608,6 +606,8 @@ char **printmap(char gate, int index)
         printf("\n");
     }
 
+    
+
     // Allocate memory for a 2D char array
     char **mapArray = (char **)malloc(21 * sizeof(char *));
     for (int i = 0; i < 21; i++)
@@ -621,6 +621,8 @@ char **printmap(char gate, int index)
 
     return mapArray;
 }
+
+
 
 void MapToMap()
 {
@@ -701,7 +703,8 @@ void MapToMap()
                 }
             }
         }
-        else if(userInput == 's'){
+        else if (userInput == 's')
+        {
 
             char **map = mapArray[currentMap.x][currentMap.y];
             // Go through the first row and find which row index was # assigned on
@@ -725,59 +728,8 @@ void MapToMap()
             {
                 mapArray[x][y] = printmap('n', gateIndex); // need to modify this to take in specific gate posiions to generate
             }
-            else {
-
-                char **centralMap = mapArray[x][y];
-
-                for (int i = 0; i < 21; i++)
-                {
-                    for (int j = 0; j < 80; j++)
-                    {
-                        if (centralMap[i][j] == '^')
-                        {
-
-                            printColoredChar('.');
-                        }
-                        else if (centralMap[i][j] == '.')
-                        {
-
-                            printColoredChar('^');
-                        }
-                        else
-                        {
-                            printColoredChar(centralMap[i][j]);
-                        }
-                    }
-                    printf("\n");
-                }
-            }
-        }else if(userInput == 'e'){
-
-            char **map = mapArray[currentMap.x][currentMap.y];
-            // Go through the first row and find which row index was # assigned on
-            int gateIndex = -1;
-            for (int i = 0; i < 21; i++)
+            else
             {
-                if (map[i][79] == '#')
-                {
-                    gateIndex = i;
-                    break;
-                }
-            }
-
-            // find appropriate row at which gate exists
-
-
-            updateY(&currentMap, currentMap.y + 1);
-            int x = currentMap.x;
-            int y = currentMap.y;
-
-
-            if (mapArray[x][y] == NULL)
-            {
-                mapArray[x][y] = printmap('w', gateIndex); // need to modify this to take in specific gate posiions to generate
-            }
-            else {
 
                 char **centralMap = mapArray[x][y];
 
@@ -804,7 +756,61 @@ void MapToMap()
                 }
             }
         }
-        else if(userInput == 'w'){
+        else if (userInput == 'e')
+        {
+
+            char **map = mapArray[currentMap.x][currentMap.y];
+            // Go through the first row and find which row index was # assigned on
+            int gateIndex = -1;
+            for (int i = 0; i < 21; i++)
+            {
+                if (map[i][79] == '#')
+                {
+                    gateIndex = i;
+                    break;
+                }
+            }
+
+            // find appropriate row at which gate exists
+
+            updateY(&currentMap, currentMap.y + 1);
+            int x = currentMap.x;
+            int y = currentMap.y;
+
+            if (mapArray[x][y] == NULL)
+            {
+                mapArray[x][y] = printmap('w', gateIndex); // need to modify this to take in specific gate posiions to generate
+            }
+            else
+            {
+
+                char **centralMap = mapArray[x][y];
+
+                for (int i = 0; i < 21; i++)
+                {
+                    for (int j = 0; j < 80; j++)
+                    {
+                        if (centralMap[i][j] == '^')
+                        {
+
+                            printColoredChar('.');
+                        }
+                        else if (centralMap[i][j] == '.')
+                        {
+
+                            printColoredChar('^');
+                        }
+                        else
+                        {
+                            printColoredChar(centralMap[i][j]);
+                        }
+                    }
+                    printf("\n");
+                }
+            }
+        }
+        else if (userInput == 'w')
+        {
 
             char **map = mapArray[currentMap.x][currentMap.y];
             // Go through the first row and find which row index was # assigned on
@@ -826,7 +832,8 @@ void MapToMap()
             {
                 mapArray[x][y] = printmap('e', gateIndex); // need to modify this to take in specific gate posiions to generate
             }
-            else {
+            else
+            {
 
                 char **centralMap = mapArray[x][y];
 
@@ -852,19 +859,112 @@ void MapToMap()
                     printf("\n");
                 }
             }
-
-
         }
-        else if (userInput=='q'){
+        else if (userInput == 'f')
+        {
+            int x;
+            int y;
+            printf("Enter x coordinate of map you want to go to ");
+            scanf(" %d", &x); // Note the space before %c to skip whitespace
+            printf("Enter y coordinate of map you want to go to ");
+            scanf(" %d", &y); // Note the space before %c to skip whitespace
+            // As our center internally is 200,200 and we want out position with respect to that
+            x += 200;
+            y += 200;
+            updateX(&currentMap, x);
+            updateY(&currentMap, y);
+            x = currentMap.x;
+            y = currentMap.y;
+
+            if (mapArray[x][y] == NULL)
+            {
+                mapArray[x][y] = printmap(' ', -1); // need to modify this to take in specific gate posiions to generate
+            }
+            else
+            {
+
+                char **centralMap = mapArray[x][y];
+
+                for (int i = 0; i < 21; i++)
+                {
+                    for (int j = 0; j < 80; j++)
+                    {
+                        if (centralMap[i][j] == '^')
+                        {
+
+                            printColoredChar('.');
+                        }
+                        else if (centralMap[i][j] == '.')
+                        {
+
+                            printColoredChar('^');
+                        }
+                        else
+                        {
+                            printColoredChar(centralMap[i][j]);
+                        }
+                    }
+                    printf("\n");
+                }
+            }
+        }
+        else if (userInput == 'q')
+        {
             printf("#########QUITTING############\n");
         }
-        else{
+        else
+        {
             printf("Please generate a valid input");
         }
-    } while (userInput != 'q');
 
-    printf("Exiting the program.\n");
+        // MAKING THE WORLD EDGES HAVE APPROPRIATE BOUNDRIES AND HAVE NO GATES
+        if (currentMap.x == 0)
+        {
+            for (int j = 0; j < 80; j++)
+            {
+                if (mapArray[currentMap.x][currentMap.y][0][j] == '#')
+                {
+                    mapArray[currentMap.x][currentMap.y][0][j] = '%';
+                }
+            }
+        }
+        else if (currentMap.x == 400)
+        {
+
+            for (int j = 0; j < 80; j++)
+            {
+                if (mapArray[currentMap.x][currentMap.y][20][j] == '#')
+                {
+                    mapArray[currentMap.x][currentMap.y][20][j] = '%';
+                }
+            }
+        }
+
+        if (currentMap.y == 0)
+        {
+            for (int i = 0; i < 21; i++)
+            {
+                if (mapArray[currentMap.x][currentMap.y][i][0] == '#')
+                {
+                    mapArray[currentMap.x][currentMap.y][i][0] = '%';
+                }
+            }
+        }
+        else if (currentMap.y == 400)
+        {
+            for (int i = 0; i < 21; i++)
+            {
+                if (mapArray[currentMap.x][currentMap.y][i][79] == '#')
+                {
+                    mapArray[currentMap.x][currentMap.y][i][79] = '%';
+                }
+            }
+        }
+
+    } while (userInput != 'q');
 }
+
+
 
 int main(int argc, char *argv[])
 {
