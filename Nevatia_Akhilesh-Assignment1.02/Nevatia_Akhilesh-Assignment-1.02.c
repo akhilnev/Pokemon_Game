@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 #define COLOR_RESET "\x1B[0m"
 #define COLOR_GREEN "\x1B[32m"
@@ -186,7 +187,7 @@ int isEmpty(struct Queue *queue)
     return queue->front == NULL;
 }
 
-char **printmap(char gate, int index)
+char **printmap(char gate, int index , int mapx , int mapy )
 {
 
     int rows = 21;
@@ -420,11 +421,21 @@ char **printmap(char gate, int index)
 
     // ATTACHING POKEMON CENTERS TO THE ROADS
 
-    int Py = rand() % 70 + 6;
-    int Px = rand() % 10 + 5;
+
+    int d = sqrt(pow(200 - mapx, 2) + pow(200 - mapy, 2));
+    
+    int prob = (((-45*d)/200) + 50);
+
+    int value = rand()%101; // between 1 to 100 ( included)
 
     int aroundx[] = {0, 1, 0, -1, 1, -1, 1, -1};
     int aroundy[] = {1, 0, -1, 0, -1, 1, 1, -1};
+
+    if(value <= prob){
+
+    int Py = rand() % 70 + 6;
+    int Px = rand() % 10 + 5;
+
 
     int free = 0;
 
@@ -496,6 +507,11 @@ char **printmap(char gate, int index)
         map[Mx][My] = '#';
         Mx++;
     }
+
+    }
+
+
+
 
     // FILLING MAP UP WITH DIFFERENT TERRAINS USING CUSTOM MADE QUEUE
 
@@ -580,6 +596,52 @@ char **printmap(char gate, int index)
         }
     }
 
+
+
+    // MAKING THE WORLD EDGES HAVE APPROPRIATE BOUNDRIES AND HAVE NO GATES
+        if (mapx == 0)
+        {
+            for (int j = 0; j < 80; j++)
+            {
+                if (map[0][j] == '#')
+                {
+                    map[0][j] = '%';
+                }
+            }
+        }
+        else if (mapx == 400)
+        {
+
+            for (int j = 0; j < 80; j++)
+            {
+                if (map[20][j] == '#')
+                {
+                    map[20][j] = '%';
+                }
+            }
+        }
+
+        if (mapy == 0)
+        {
+            for (int i = 0; i < 21; i++)
+            {
+                if (map[i][0] == '#')
+                {
+                    map[i][0] = '%';
+                }
+            }
+        }
+        else if (mapy== 400)
+        {
+            for (int i = 0; i < 21; i++)
+            {
+                if (map[i][79] == '#')
+                {
+                    map[i][79] = '%';
+                }
+            }
+        }
+
     // PRINTING BOARD FORMULATED
 
     for (int i = 0; i < rows; i++)
@@ -635,7 +697,7 @@ void MapToMap()
         for (int j = 0; j < 401; j++)
         {
             if (i == 200 && j == 200)
-                mapArray[i][j] = printmap(' ', -1); // 0, 0 in the map
+                mapArray[i][j] = printmap(' ', -1,200,200); // 0, 0 in the map
             else
                 mapArray[i][j] = NULL;
         }
@@ -673,7 +735,7 @@ void MapToMap()
             // gives the coordintes we want to store the pointer of
             if (mapArray[x][y] == NULL)
             {
-                mapArray[x][y] = printmap('s', gateIndex); // need to modify this to take in specific gate posiions to generate
+                mapArray[x][y] = printmap('s', gateIndex , currentMap.x, currentMap.y); // need to modify this to take in specific gate posiions to generate
             }
             else
             {
@@ -726,7 +788,7 @@ void MapToMap()
 
             if (mapArray[x][y] == NULL)
             {
-                mapArray[x][y] = printmap('n', gateIndex); // need to modify this to take in specific gate posiions to generate
+                mapArray[x][y] = printmap('n', gateIndex,currentMap.x,currentMap.y); // need to modify this to take in specific gate posiions to generate
             }
             else
             {
@@ -779,7 +841,7 @@ void MapToMap()
 
             if (mapArray[x][y] == NULL)
             {
-                mapArray[x][y] = printmap('w', gateIndex); // need to modify this to take in specific gate posiions to generate
+                mapArray[x][y] = printmap('w', gateIndex,currentMap.x,currentMap.y); // need to modify this to take in specific gate posiions to generate
             }
             else
             {
@@ -830,7 +892,7 @@ void MapToMap()
 
             if (mapArray[x][y] == NULL)
             {
-                mapArray[x][y] = printmap('e', gateIndex); // need to modify this to take in specific gate posiions to generate
+                mapArray[x][y] = printmap('e', gateIndex,currentMap.x,currentMap.y); // need to modify this to take in specific gate posiions to generate
             }
             else
             {
@@ -878,7 +940,7 @@ void MapToMap()
 
             if (mapArray[x][y] == NULL)
             {
-                mapArray[x][y] = printmap(' ', -1); // need to modify this to take in specific gate posiions to generate
+                mapArray[x][y] = printmap(' ', -1,currentMap.x,currentMap.y); // need to modify this to take in specific gate posiions to generate
             }
             else
             {
@@ -973,7 +1035,6 @@ int main(int argc, char *argv[])
 
     MapToMap();
 
-    // printmap();
 
     return 0;
 }
