@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-
+#include <limits.h>
 #define COLOR_RESET "\x1B[0m"
 #define COLOR_GREEN "\x1B[32m"
 #define COLOR_BLUE "\x1B[34m"
@@ -40,6 +40,11 @@ void printColoredChar(char character)
         printf("%c", character);
     }
 }
+
+typedef struct {
+    int x;  // x-coordinate of the PC
+    int y;  // y-coordinate of the PC
+} PC;
 
 void printLegend()
 {
@@ -229,7 +234,8 @@ char **printmap(char gate, int index , int mapx , int mapy )
         horzy++; // initial step to get out of boulders
         map[horzx][horzy] = '#';
         // int Hstarty = rand()%80;
-
+        
+        
         while (horzy != 79)
         {
             int dirn = (rand() % 2); // as we only want to go ahead in terms of cols
@@ -298,14 +304,25 @@ char **printmap(char gate, int index , int mapx , int mapy )
         map[horzx][horzy] = '#';
         // int Hstarty = rand()%80;
 
+        //PLACING THE PC 
+        int count = rand()%10;
+        int var = 0;
         while (horzy != 79)
         {
             int dirn = (rand() % 2); // as we only want to go ahead in terms of cols
             if ((map[horzx + dx[dirn]][horzy + dy[dirn]]) != '%')
-            {
+            {   
+                var++;
                 horzx += dx[dirn];
                 horzy += dy[dirn];
+                if(var == count){
+                    map[horzx][horzy] = '@'; // PLACING PLAYER CHARACTER RANDOMLY ON THE ROAD SIDE 
+                    PC playerCharacter;  // Declare a PC object
+                    playerCharacter.x = horzx;  // Set x-coordinate
+                    playerCharacter.y = horzy;  // Set y-coordinate
+                }else{
                 map[horzx][horzy] = '#';
+                }
             }
             else
             {
@@ -680,6 +697,27 @@ char **printmap(char gate, int index , int mapx , int mapy )
             mapArray[i][j] = map[i][j];
         }
     }
+     // ADDING A MAP FOR HIKERS AND RIVAL SHOWING SHORTERST DISTANCES TO THE PLAYER CHARCATER
+
+     int hikers[21][80]; // hikers map to be used to print distances till PC
+     int rival[21][80]; // rival mapto BE USED TO PRINT DISTANCES TILL PC 
+
+     // NEED TO IMPLEMENT DIJKSTRA FOR HIKER AND RIVAL ACCORDING TO THE DISTANCE VALUES GIVEN 
+
+     // DISTANCES FOR HIKER TO BE USED IN DIKJSTRA ALGORITHM
+     // % - INF 
+     // ^ - INF
+     // # - 10
+     // M - 50
+     // C - 50 
+     // : - 15
+     // . - 10
+     // ~ - INF 
+     // #(E) - INF 
+
+     
+
+
 
     return mapArray;
 }
