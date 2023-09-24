@@ -238,7 +238,7 @@ int getHikerWeight(char symbol, int row, int column) {
         weight = 10;
     } else {
         // Handle any other symbols not listed (error condition)
-        printf("Unknown symbol: %c\n", symbol);
+        weight = INT_MAX;
     }
 
     return weight;
@@ -277,14 +277,15 @@ void printHmap(char map[21][80] ,int row , int col){
         int x = minElement.row;
         int y = minElement.column;
         int weight = minElement.weight;
-        if(visited[x][y] == 1) continue;
+        printf("w: %d %d %d\n",x,y,weight);
+        if(visited[x][y] == 1 || x < 0 || y > 79 || x > 20 || y < 0) continue;
+        
         visited[x][y] = 1;
         for(int i = 0 ; i < 8 ; i++){
             
-            if(hiker[x+aroundx[i]][y+aroundy[i]] > (weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]] ,x + aroundx[i], y + aroundy[i]))) {
-                hiker[x+aroundx[i]][y+aroundy[i]] = weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]] ,x + aroundx[i], y + aroundy[i]);
-                printf("%c",map[x+aroundx[i]][y+aroundy[i]]);
-                printf("%d",pq->size);
+            if(hiker[x+aroundx[i]][y+aroundy[i]] > ((weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]] ,x + aroundx[i], y + aroundy[i]))%100)) {
+                hiker[x+aroundx[i]][y+aroundy[i]] =((weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]] ,x + aroundx[i], y + aroundy[i]))%100);
+                //printf("%c",map[x+aroundx[i]][y+aroundy[i]]);
                 insert(pq,x+aroundx[i],y+aroundy[i],hiker[x+aroundx[i]][y+aroundy[i]]);
             }
             
@@ -295,8 +296,8 @@ void printHmap(char map[21][80] ,int row , int col){
 
     for(int i = 0 ; i < 21 ; i++){
         for(int j = 0 ; j < 80 ; j++){
-            if(hiker[i][j] == INT_MAX) printf(" ");
-            else printf("%d",hiker[i][j]);
+            if(hiker[i][j] == INT_MAX) printf("  ");
+            else printf("%2d ",hiker[i][j]);
         }
         printf("\n");
     }
