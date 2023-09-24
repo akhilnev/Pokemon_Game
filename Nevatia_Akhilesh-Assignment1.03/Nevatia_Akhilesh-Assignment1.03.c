@@ -41,10 +41,13 @@ void printColoredChar(char character)
     }
 }
 
+
+
 typedef struct {
     int x;  // x-coordinate of the PC
     int y;  // y-coordinate of the PC
 } PC;
+
 
 void printLegend()
 {
@@ -66,6 +69,7 @@ typedef struct
     void (*updateX)(struct CurrMap *, int);
     void (*updateY)(struct CurrMap *, int);
 } CurrMap;
+
 
 // Function to update the x coordinate with bounds checking
 void updateX(CurrMap *currMap, int newX)
@@ -105,6 +109,94 @@ void updateY(CurrMap *currMap, int newY)
     }
 }
 
+
+// CREATING PRIORITY QUEUE TO IMPLEMENT DIJKSTRA 
+
+typedef struct {
+    int row;
+    int column;
+    int weight;
+} Element;
+
+typedef struct {
+    Element *arr;
+    int capacity;
+    int size;
+} PriorityQueue;
+
+PriorityQueue *createPriorityQueue(int capacity) {
+    PriorityQueue *pq = (PriorityQueue *)malloc(sizeof(PriorityQueue));
+    pq->arr = (Element *)malloc(sizeof(Element) * (capacity + 1));  // 1-indexed array
+    pq->capacity = capacity;
+    pq->size = 0;
+    return pq;
+}
+
+void swap(Element *a, Element *b) {
+    Element temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void minHeapify(PriorityQueue *pq, int idx) {
+    int smallest = idx;
+    int left = 2 * idx;
+    int right = 2 * idx + 1;
+
+    if (left <= pq->size && pq->arr[left].weight < pq->arr[smallest].weight)
+        smallest = left;
+
+    if (right <= pq->size && pq->arr[right].weight < pq->arr[smallest].weight)
+        smallest = right;
+
+    if (smallest != idx) {
+        swap(&pq->arr[idx], &pq->arr[smallest]);
+        minHeapify(pq, smallest);
+    }
+}
+
+void insert(PriorityQueue *pq, int row, int column, int weight) {
+    if (pq->size >= pq->capacity) {
+        printf("Priority queue is full.\n");
+        return;
+    }
+
+    pq->size++;
+    int i = pq->size;
+    pq->arr[i].row = row;
+    pq->arr[i].column = column;
+    pq->arr[i].weight = weight;
+
+    while (i > 1 && pq->arr[i].weight < pq->arr[i / 2].weight) {
+        swap(&pq->arr[i], &pq->arr[i / 2]);
+        i /= 2;
+    }
+}
+
+Element extractMin(PriorityQueue *pq) {
+    if (pq->size == 0) {
+        printf("Priority queue is empty.\n");
+        Element nullElement = { -1, -1, -1 };
+        return nullElement;
+    }
+
+    Element minElement = pq->arr[1];
+    pq->arr[1] = pq->arr[pq->size];
+    pq->size--;
+    minHeapify(pq, 1);
+
+    return minElement;
+}
+
+int isEmp(PriorityQueue *pq) {
+    return pq->size == 0;
+}
+
+void freePriorityQueue(PriorityQueue *pq) {
+    free(pq->arr);
+    free(pq);
+}
+
 // Define a custom class to store x, y coordinates, and a character value
 struct CustomData
 {
@@ -126,6 +218,92 @@ struct Queue
     struct QueueNode *front;
     struct QueueNode *rear;
 };
+
+// FUNCTION TO GET WEIGHT OF EACH SYMBOL BASED ON HIKER 
+int getHikerWeight(char symbol, int row, int column) { 
+    
+    int weight = -1;
+
+    // Determine weight based on the symbol
+    if (symbol == '%' || symbol == '^' || symbol == '~') {
+        weight = INT_MAX;  // Represents infinity
+    } else if (symbol == '#') {
+        if(row==0 || row == 20 || column ==0 || column == 79) weight = INT_MAX;
+        else weight = 10;
+    } else if (symbol == 'M' || symbol == 'C') {
+        weight = 50;
+    } else if (symbol == ':') {
+        weight = 15;
+    } else if (symbol == '.') {
+        weight = 10;
+    } else {
+        // Handle any other symbols not listed (error condition)
+        printf("Unknown symbol: %c\n", symbol);
+    }
+
+    return weight;
+}
+
+
+void printHmap(char map[21][80] ,int row , int col){
+    // printing the hikermap using dijkstra's algorithm
+    int hiker[21][80];
+    PriorityQueue *pq = createPriorityQueue(1680); // MAX POSSIBLE STORAGE 
+    insert(pq,row,col,0);
+    
+    int visited[21][80];
+    // initializing visited array to 0
+    for(int i = 0 ; i < 21 ; i++){
+        for(int j = 0 ; j < 80 ; j++){
+            visited[i][j] = 0;
+        }
+    }
+
+      for(int i = 0 ; i < 21 ; i++){
+        for(int j = 0 ; j < 80 ; j++){
+            hiker[i][j] = INT_MAX; // EVERYTHING AT INFINITE DISTANCE INITIALLY 
+        }
+    }
+
+    hiker[row][col] = 0; // distance of the source from itself is 0
+
+    //To implement an 8 - directional search
+    int aroundx[] = {0, 1, 0, -1, 1, -1, 1, -1};
+    int aroundy[] = {1, 0, -1, 0, -1, 1, 1, -1};
+
+    // I AM HERE 
+    while(!isEmp(pq)){
+        Element minElement = extractMin(pq);
+        int x = minElement.row;
+        int y = minElement.column;
+        int weight = minElement.weight;
+        if(visited[x][y] == 1) continue;
+        visited[x][y] = 1;
+        for(int i = 0 ; i < 8 ; i++){
+            
+            if(hiker[x+aroundx[i]][y+aroundy[i]] > (weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]] ,x + aroundx[i], y + aroundy[i]))) {
+                hiker[x+aroundx[i]][y+aroundy[i]] = weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]] ,x + aroundx[i], y + aroundy[i]);
+                printf("%c",map[x+aroundx[i]][y+aroundy[i]]);
+                printf("%d",pq->size);
+                insert(pq,x+aroundx[i],y+aroundy[i],hiker[x+aroundx[i]][y+aroundy[i]]);
+            }
+            
+        }
+    }
+
+    // print the hiker array as a 2d array 
+
+    for(int i = 0 ; i < 21 ; i++){
+        for(int j = 0 ; j < 80 ; j++){
+            if(hiker[i][j] == INT_MAX) printf(" ");
+            else printf("%d",hiker[i][j]);
+        }
+        printf("\n");
+    }
+
+
+
+ }
 
 // Function to create an empty queue
 struct Queue *createQueue()
@@ -194,7 +372,7 @@ int isEmpty(struct Queue *queue)
 
 char **printmap(char gate, int index , int mapx , int mapy )
 {
-
+    PC playerCharacter;
     int rows = 21;
     int cols = 80;
     char map[rows][cols]; // dimensions of the map we want to generate
@@ -234,8 +412,7 @@ char **printmap(char gate, int index , int mapx , int mapy )
         horzy++; // initial step to get out of boulders
         map[horzx][horzy] = '#';
         // int Hstarty = rand()%80;
-        
-        
+ 
         while (horzy != 79)
         {
             int dirn = (rand() % 2); // as we only want to go ahead in terms of cols
@@ -303,7 +480,6 @@ char **printmap(char gate, int index , int mapx , int mapy )
         horzy++; // initial step to get out of boulders
         map[horzx][horzy] = '#';
         // int Hstarty = rand()%80;
-
         //PLACING THE PC 
         int count = rand()%10;
         int var = 0;
@@ -311,17 +487,16 @@ char **printmap(char gate, int index , int mapx , int mapy )
         {
             int dirn = (rand() % 2); // as we only want to go ahead in terms of cols
             if ((map[horzx + dx[dirn]][horzy + dy[dirn]]) != '%')
-            {   
+            {
                 var++;
                 horzx += dx[dirn];
                 horzy += dy[dirn];
+                map[horzx][horzy] = '#';
                 if(var == count){
                     map[horzx][horzy] = '@'; // PLACING PLAYER CHARACTER RANDOMLY ON THE ROAD SIDE 
-                    PC playerCharacter;  // Declare a PC object
+                    // Declare a PC object
                     playerCharacter.x = horzx;  // Set x-coordinate
                     playerCharacter.y = horzy;  // Set y-coordinate
-                }else{
-                map[horzx][horzy] = '#';
                 }
             }
             else
@@ -685,6 +860,9 @@ char **printmap(char gate, int index , int mapx , int mapy )
         printf("\n");
     }
 
+
+    printHmap(map, playerCharacter.x, playerCharacter.y);
+
     
 
     // Allocate memory for a 2D char array
@@ -697,31 +875,24 @@ char **printmap(char gate, int index , int mapx , int mapy )
             mapArray[i][j] = map[i][j];
         }
     }
-     // ADDING A MAP FOR HIKERS AND RIVAL SHOWING SHORTERST DISTANCES TO THE PLAYER CHARCATER
-
-     int hikers[21][80]; // hikers map to be used to print distances till PC
-     int rival[21][80]; // rival mapto BE USED TO PRINT DISTANCES TILL PC 
-
-     // NEED TO IMPLEMENT DIJKSTRA FOR HIKER AND RIVAL ACCORDING TO THE DISTANCE VALUES GIVEN 
-
-     // DISTANCES FOR HIKER TO BE USED IN DIKJSTRA ALGORITHM
-     // % - INF 
-     // ^ - INF
-     // # - 10
-     // M - 50
-     // C - 50 
-     // : - 15
-     // . - 10
-     // ~ - INF 
-     // #(E) - INF 
-
-     
-
-
 
     return mapArray;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+// MOVING AROUND TO DIFFERENT MAPS FUNCTION 
 
 
 void MapToMap()
