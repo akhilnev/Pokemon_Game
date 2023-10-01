@@ -62,7 +62,9 @@ void printLegend()
 }
 
 // Keeping a track of which map is the current map using custom made Struct which updates and handles edge cases
-typedef struct
+
+//typedef struct CurrMap CurrMap;
+typedef struct CurrMap
 {
     int x;
     int y;
@@ -225,7 +227,7 @@ int getHikerWeight(char symbol, int row, int column) {
     int weight = -1;
 
     // Determine weight based on the symbol
-    if (symbol == '%' || symbol == '^' || symbol == '~') {
+    if (symbol == '%' || symbol == '.' || symbol == '~') {
         weight = INT_MAX;  // Represents infinity
     } else if (symbol == '#') {
         if(row==0 || row == 20 || column ==0 || column == 79) weight = INT_MAX;
@@ -234,7 +236,7 @@ int getHikerWeight(char symbol, int row, int column) {
         weight = 50;
     } else if (symbol == ':') {
         weight = 15;
-    } else if (symbol == '.') {
+    } else if (symbol == '^') {
         weight = 10;
     } else {
         // Handle any other symbols not listed (error condition)
@@ -244,8 +246,33 @@ int getHikerWeight(char symbol, int row, int column) {
     return weight;
 }
 
+int getRivalWeight(char symbol, int row, int column){
+    int weight = -1;
 
-void printHmap(char map[21][80] ,int row , int col){
+    // Determine weight based on the symbol
+    if (symbol == '%' || symbol == '.' || symbol == '~') {
+        weight = INT_MAX;  // Represents infinity
+    } else if (symbol == '#') {
+        if(row==0 || row == 20 || column ==0 || column == 79) weight = INT_MAX;
+        else weight = 10;
+    } else if (symbol == 'M' || symbol == 'C') {
+        weight = 50;
+    } else if (symbol == ':') {
+        weight = 20;
+    } else if (symbol == '^') {
+        weight = 10;
+    } else {
+        // Handle any other symbols not listed (error condition)
+        weight = 9999999;
+    }
+
+    return weight;
+
+}
+
+void printRmap(char map[21][80] ,int row , int col){
+
+    printf("RIVAL MAP \n");
     // printing the hikermap using dijkstra's algorithm
     int hiker[21][80];
     PriorityQueue *pq = createPriorityQueue(20000); // MAX POSSIBLE STORAGE 
@@ -283,14 +310,13 @@ void printHmap(char map[21][80] ,int row , int col){
         
         visited[x][y] = 1;
         for(int i = 0 ; i < 8 ; i++){
+
+            int newWeight = (weight + getRivalWeight(map[x+aroundx[i]][y+aroundy[i]], x + aroundx[i], y + aroundy[i])) % 100;
             
-            if(visited[x+aroundx[i]][y+aroundy[i]]== 0 && hiker[x+aroundx[i]][y+aroundy[i]] > ((weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]] ,x + aroundx[i], y + aroundy[i]))%100)) {
+            if(visited[x+aroundx[i]][y+aroundy[i]]== 0 && hiker[x+aroundx[i]][y+aroundy[i]] > newWeight) {
                 //hiker[x+aroundx[i]][y+aroundy[i]] =((weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]] ,x + aroundx[i], y + aroundy[i]))%100);
                 //printf("%c",map[x+aroundx[i]][y+aroundy[i]]);
-                int newWeight = (weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]], x + aroundx[i], y + aroundy[i])) % 100;
                 hiker[x+aroundx[i]][y+aroundy[i]] = (newWeight < 0) ? INT_MAX : newWeight;
-
-                
                 insert(pq,x+aroundx[i],y+aroundy[i],hiker[x+aroundx[i]][y+aroundy[i]]);
             }
             
@@ -306,6 +332,76 @@ void printHmap(char map[21][80] ,int row , int col){
         }
         printf("\n");
     }
+
+}
+
+
+void printHmap(char map[21][80] ,int row , int col){
+
+    printf("HIKER MAP \n");
+    // printing the hikermap using dijkstra's algorithm
+    int hiker[21][80];
+    PriorityQueue *pq = createPriorityQueue(20000); // MAX POSSIBLE STORAGE 
+    
+    
+    int visited[21][80];
+    // initializing visited array to 0
+    for(int i = 0 ; i < 21 ; i++){
+        for(int j = 0 ; j < 80 ; j++){
+            visited[i][j] = 0;
+        }
+    }
+
+      for(int i = 0 ; i < 21 ; i++){
+        for(int j = 0 ; j < 80 ; j++){
+            hiker[i][j] = 9999999; // EVERYTHING AT INFINITE DISTANCE INITIALLY 
+        }
+    }
+
+    insert(pq,row,col,0);
+
+    hiker[row][col] = 0; // distance of the source from itself is 0
+
+    //To implement an 8 - directional search
+    int aroundx[] = {0, 1, 0, -1, 1, -1, 1, -1};
+    int aroundy[] = {1, 0, -1, 0, -1, 1, 1, -1};
+
+    // I AM HERE 
+    while(!isEmp(pq)){
+        Element minElement = extractMin(pq);
+        int x = minElement.row;
+        int y = minElement.column;
+        int weight = minElement.weight;
+        if(visited[x][y] == 1 || x < 0 || y > 79 || x > 20 || y < 0) continue;
+        
+        visited[x][y] = 1;
+        for(int i = 0 ; i < 8 ; i++){
+
+            int newWeight = (weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]], x + aroundx[i], y + aroundy[i])) % 100;
+            
+            if(visited[x+aroundx[i]][y+aroundy[i]]== 0 && hiker[x+aroundx[i]][y+aroundy[i]] > newWeight) {
+                //hiker[x+aroundx[i]][y+aroundy[i]] =((weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]] ,x + aroundx[i], y + aroundy[i]))%100);
+                //printf("%c",map[x+aroundx[i]][y+aroundy[i]]);
+                hiker[x+aroundx[i]][y+aroundy[i]] = (newWeight < 0) ? INT_MAX : newWeight;
+                insert(pq,x+aroundx[i],y+aroundy[i],hiker[x+aroundx[i]][y+aroundy[i]]);
+            }
+            
+        }
+    }
+
+    // print the hiker array as a 2d array 
+
+    for(int i = 0 ; i < 21 ; i++){
+        for(int j = 0 ; j < 80 ; j++){
+            if(hiker[i][j] == INT_MAX) printf("  ");
+            else printf("%2d ",hiker[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("\n");
+    printf("\n");
+
 
 
 
@@ -869,6 +965,7 @@ char **printmap(char gate, int index , int mapx , int mapy )
     
     printHmap(map, playerCharacter.x, playerCharacter.y);
 
+    printRmap(map, playerCharacter.x, playerCharacter.y);
     
 
     // Allocate memory for a 2D char array
