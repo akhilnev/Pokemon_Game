@@ -238,7 +238,7 @@ int getHikerWeight(char symbol, int row, int column) {
         weight = 10;
     } else {
         // Handle any other symbols not listed (error condition)
-        weight = INT_MAX;
+        weight = 9999999;
     }
 
     return weight;
@@ -248,8 +248,8 @@ int getHikerWeight(char symbol, int row, int column) {
 void printHmap(char map[21][80] ,int row , int col){
     // printing the hikermap using dijkstra's algorithm
     int hiker[21][80];
-    PriorityQueue *pq = createPriorityQueue(1680); // MAX POSSIBLE STORAGE 
-    insert(pq,row,col,0);
+    PriorityQueue *pq = createPriorityQueue(20000); // MAX POSSIBLE STORAGE 
+    
     
     int visited[21][80];
     // initializing visited array to 0
@@ -261,9 +261,11 @@ void printHmap(char map[21][80] ,int row , int col){
 
       for(int i = 0 ; i < 21 ; i++){
         for(int j = 0 ; j < 80 ; j++){
-            hiker[i][j] = INT_MAX; // EVERYTHING AT INFINITE DISTANCE INITIALLY 
+            hiker[i][j] = 9999999; // EVERYTHING AT INFINITE DISTANCE INITIALLY 
         }
     }
+
+    insert(pq,row,col,0);
 
     hiker[row][col] = 0; // distance of the source from itself is 0
 
@@ -277,15 +279,18 @@ void printHmap(char map[21][80] ,int row , int col){
         int x = minElement.row;
         int y = minElement.column;
         int weight = minElement.weight;
-        printf("w: %d %d %d\n",x,y,weight);
         if(visited[x][y] == 1 || x < 0 || y > 79 || x > 20 || y < 0) continue;
         
         visited[x][y] = 1;
         for(int i = 0 ; i < 8 ; i++){
             
-            if(hiker[x+aroundx[i]][y+aroundy[i]] > ((weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]] ,x + aroundx[i], y + aroundy[i]))%100)) {
-                hiker[x+aroundx[i]][y+aroundy[i]] =((weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]] ,x + aroundx[i], y + aroundy[i]))%100);
+            if(visited[x+aroundx[i]][y+aroundy[i]]== 0 && hiker[x+aroundx[i]][y+aroundy[i]] > ((weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]] ,x + aroundx[i], y + aroundy[i]))%100)) {
+                //hiker[x+aroundx[i]][y+aroundy[i]] =((weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]] ,x + aroundx[i], y + aroundy[i]))%100);
                 //printf("%c",map[x+aroundx[i]][y+aroundy[i]]);
+                int newWeight = (weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]], x + aroundx[i], y + aroundy[i])) % 100;
+                hiker[x+aroundx[i]][y+aroundy[i]] = (newWeight < 0) ? INT_MAX : newWeight;
+
+                
                 insert(pq,x+aroundx[i],y+aroundy[i],hiker[x+aroundx[i]][y+aroundy[i]]);
             }
             
@@ -861,7 +866,7 @@ char **printmap(char gate, int index , int mapx , int mapy )
         printf("\n");
     }
 
-
+    
     printHmap(map, playerCharacter.x, playerCharacter.y);
 
     
