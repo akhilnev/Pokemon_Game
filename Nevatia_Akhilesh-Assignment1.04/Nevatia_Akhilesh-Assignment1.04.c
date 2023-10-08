@@ -1275,6 +1275,7 @@ char **printmap(char gate, int index , int mapx , int mapy )
         }else if(map[x][y]=='p'){
             
 
+
         }else if(map[x][y]=='w'){
 
         }else if(map[x][y]=='s'){
