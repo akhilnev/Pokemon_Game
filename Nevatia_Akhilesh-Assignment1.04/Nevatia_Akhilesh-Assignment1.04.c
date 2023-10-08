@@ -3,6 +3,8 @@
 #include <time.h>
 #include <math.h>
 #include <limits.h>
+#include <unistd.h>
+#include <signal.h>
 #define COLOR_RESET "\x1B[0m"
 #define COLOR_GREEN "\x1B[32m"
 #define COLOR_BLUE "\x1B[34m"
@@ -126,7 +128,7 @@ typedef struct {
     int size;
 } MyPriorityQueue;
 
-MyPriorityQueue* createPriorityQueue(int capacity) {
+MyPriorityQueue* createMyPriorityQueue(int capacity) {
     MyPriorityQueue* pq = (MyPriorityQueue*)malloc(sizeof(MyPriorityQueue));
     pq->arr = (PQElement*)malloc(sizeof(PQElement) * (capacity + 1));
     pq->capacity = capacity;
@@ -140,7 +142,7 @@ void mySwap(PQElement* a, PQElement* b) {
     *b = temp;
 }
 
-void minHeapify(MyPriorityQueue* pq, int idx) {
+void minMyHeapify(MyPriorityQueue* pq, int idx) {
     int smallest = idx;
     int left_child = 2 * idx;
     int right_child = 2 * idx + 1;
@@ -153,7 +155,7 @@ void minHeapify(MyPriorityQueue* pq, int idx) {
 
     if (smallest != idx) {
         mySwap(&pq->arr[idx], &pq->arr[smallest]);
-        minHeapify(pq, smallest);
+        minMyHeapify(pq, smallest);
     }
 }
 
@@ -187,7 +189,7 @@ PQElement myDequeue(MyPriorityQueue* pq) {
     pq->arr[1] = pq->arr[pq->size];
     pq->size--;
 
-    minHeapify(pq, 1);
+    minMyHeapify(pq, 1);
 
     return min_element;
 }
@@ -1146,7 +1148,7 @@ char **printmap(char gate, int index , int mapx , int mapy )
     int totalTrainers = 0;
     int count = 0;
 
-    MyPriorityQueue *pq = createPriorityQueue(20);
+    MyPriorityQueue *pq = createMyPriorityQueue(20);
 
 
     while(totalTrainers<numtrainers){
@@ -1237,10 +1239,23 @@ char **printmap(char gate, int index , int mapx , int mapy )
     // Register the signal handler for SIGINT (CTRL+C)
     signal(SIGINT, sigint_handler);
     int currentTime = 1;
+    int pflag = 0;
+    int wanderx[] = {-1,0,1,0};
+    int wandery[] = {0,1,0,-1};
+    int choosewander = rand()%4;
+    int wx = wanderx[choosewander];
+    int wy = wandery[choosewander];
+    int expx[] = {-1,0,1,0};
+    int expy[] = {0,1,0,-1};
+    int chooseexp = rand()%4;
+    int ex = expx[chooseexp];
+    int ey = expy[chooseexp];
 
     // Game loop
     while (game_running) {
         // Process the events occuring in the prirority queue
+        
+
         while (!isEmp(pq)) {
             PQElement minElement = myDequeue(pq);
             int x = minElement.x;
@@ -1274,17 +1289,81 @@ char **printmap(char gate, int index , int mapx , int mapy )
 
         }else if(map[x][y]=='p'){
             
+            if(pflag==0){
+                if(getOtherWeight(map[x][y+1],x,y+1)!=INT_MAX){
+                    map[x][y] = oldc;
+                    weight = currentTime + getOtherWeight(map[x][y+1],x,y+1);
+                    myEnqueue(pq,x,y+1,weight,map[x][y+1]);
+                    map[x][y+1] = 'p';
+                }else{
+                    pflag = 1;
+                    map[x][y] = oldc;
+                    weight = currentTime + getOtherWeight(map[x][y-1],x,y-1);
+                    myEnqueue(pq,x,y-1,weight,map[x][y-1]);
+                    map[x][y-1] = 'p';
+                }
+            }else{
+                if(getOtherWeight(map[x][y-1],x,y-1)!=INT_MAX){
+                    map[x][y] = oldc;
+                    weight = currentTime + getOtherWeight(map[x][y-1],x,y-1);
+                    myEnqueue(pq,x,y-1,weight,map[x][y-1]);
+                    map[x][y-1] = 'p';
+                }else{
+                    pflag = 0;
+                    map[x][y] = oldc;
+                    weight = currentTime + getOtherWeight(map[x][y+1],x,y+1);
+                    myEnqueue(pq,x,y+1,weight,map[x][y+1]);
+                    map[x][y+1] = 'p';
+                }
 
-
+            }
         }else if(map[x][y]=='w'){
 
-        }else if(map[x][y]=='s'){
+            map[x][y] = oldc;
+            if(map[x+wx][y+wy]==oldc){
+                weight = currentTime + getOtherWeight(map[x+wx][y+wy],x+wx,y+wy);
+                myEnqueue(pq,x+wx,y+wy,weight,map[x+wx][y+wy]);
+                map[x+wx][y+wy] = 'w';
+            }else{
+                while(map[x+wx][y+wy]!=oldc){
+                    choosewander = rand()%4;
+                    wx = wanderx[choosewander];
+                    wy = wandery[choosewander];
+                }
+                weight = currentTime + getOtherWeight(map[x+wx][y+wy],x+wx,y+wy);
+                myEnqueue(pq,x+wx,y+wy,weight,map[x+wx][y+wy]);
+                map[x+wx][y+wy] = 'w';
 
+            }
+
+        }else if(map[x][y]=='s'){
+            // Wait for action to come to them and stay stationary
+            // obviously we change the weight based on current time being updated 
+            weight = currentTime + getOtherWeight(map[x][y],x,y);
+            myEnqueue(pq,x,y,weight,map[x][y]);
         }else if(map[x][y]=='e'){
 
-        }
+            map[x][y] = oldc;
+            if(getOtherWeight(map[x+ex][y+ey],x+ex,y+ey)!=INT_MAX){
+                weight = currentTime + getOtherWeight(map[x+ex][y+ey],x+ex,y+ey);
+                myEnqueue(pq,x+ex,y+ey,weight,map[x+ex][y+ey]);
+                map[x+ex][y+ey] = 'e';
+            }else{
+                while(getOtherWeight(map[x+ex][y+ey],x+ex,y+ey)==INT_MAX){
+                    chooseexp = rand()%4;
+                    ex = expx[chooseexp];
+                    ey = expy[chooseexp];
+                }
+                weight = currentTime + getOtherWeight(map[x+ex][y+ey],x+ex,y+ey);
+                myEnqueue(pq,x+ex,y+ey,weight,map[x+ex][y+ey]);
+                map[x+ex][y+ey] = 'e';
 
-        currentTime++;
+            }
+
+        }
+        currentTime++;   
+
+    }
 
         // PRINTING BOARD FORMULATED
         for (int i = 0; i < rows; i++)
@@ -1318,7 +1397,7 @@ char **printmap(char gate, int index , int mapx , int mapy )
         }
         
        
-    }
+    
     
 
 
@@ -1367,6 +1446,8 @@ char **printmap(char gate, int index , int mapx , int mapy )
 
     return mapArray;
 }
+
+
 
 
 
