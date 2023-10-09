@@ -201,6 +201,14 @@ void displayMyQueue(MyPriorityQueue* pq) {
     printf("\n");
 }
 
+int isMyEmpty(MyPriorityQueue* pq) {
+    return pq->size == 0;
+}
+
+int getMySize(MyPriorityQueue* pq) {
+    return pq->size;
+}
+
 
 // CREATING PRIORITY QUEUE TO IMPLEMENT DIJKSTRA 
 
@@ -429,7 +437,7 @@ void sigint_handler(int signal) {
 
 int *printRmap(char map[21][80] ,int row , int col , int aroundr , int aroundc){
 
-    printf("RIVAL MAP \n");
+    //printf("RIVAL MAP \n");
     // printing the hikermap using dijkstra's algorithm
     int rival[21][80];
     PriorityQueue *pq = createPriorityQueue(20000); // MAX POSSIBLE STORAGE 
@@ -480,19 +488,23 @@ int *printRmap(char map[21][80] ,int row , int col , int aroundr , int aroundc){
         }
     }
 
-    // print the hiker array as a 2d array 
+    // // print the hiker array as a 2d array 
 
-    for(int i = 0 ; i < 21 ; i++){
-        for(int j = 0 ; j < 80 ; j++){
-            if(rival[i][j] == INT_MAX) printf("   ");
-            else if(rival[i][j]==0) printf("00 ");
-            else printf("%2d ",rival[i][j]);
-        }
-        printf("\n");
-    }
+    // for(int i = 0 ; i < 21 ; i++){
+    //     for(int j = 0 ; j < 80 ; j++){
+    //         if(rival[i][j] == INT_MAX) printf("   ");
+    //         else if(rival[i][j]==0) printf("00 ");
+    //         else printf("%2d ",rival[i][j]);
+    //     }
+    //     printf("\n");
+    // }
 
     int maxD = -1;
-    int val[2] = {1,1};
+    int *val = (int *)malloc(sizeof(int)*2);
+     if (val == NULL) {
+    printf("Memory allocation failed.\n");
+    exit(EXIT_FAILURE);
+}
     for(int i =0 ; i< 8 ; i++){
         if(rival[aroundr+aroundx[i]][aroundc+aroundy[i]]!= INT_MAX && rival[aroundr+aroundx[i]][aroundc+aroundy[i]] > maxD){
             maxD = rival[aroundr+aroundx[i]][aroundc+aroundy[i]];
@@ -510,7 +522,7 @@ int *printRmap(char map[21][80] ,int row , int col , int aroundr , int aroundc){
 int *printHmap(char map[21][80] ,int row , int col , int aroundr , int aroundc){
 
 
-    printf("HIKER MAP \n");
+    //printf("HIKER MAP \n");
     // printing the hikermap using dijkstra's algorithm
     int hiker[21][80];
     PriorityQueue *pq = createPriorityQueue(20000); // MAX POSSIBLE STORAGE 
@@ -561,7 +573,7 @@ int *printHmap(char map[21][80] ,int row , int col , int aroundr , int aroundc){
         }
     }
 
-    // print the hiker array as a 2d array 
+    // // print the hiker array as a 2d array 
 
     for(int i = 0 ; i < 21 ; i++){
         for(int j = 0 ; j < 80 ; j++){
@@ -574,15 +586,21 @@ int *printHmap(char map[21][80] ,int row , int col , int aroundr , int aroundc){
 
     
 
-    printf("\n");
-    printf("\n");
+    // printf("\n");
+    // printf("\n");
 
 
-    int maxD = -1;
-    int val[2] = {1,1};
+    int minD = hiker[aroundr][aroundc];
+    int *val = (int *)malloc(sizeof(int)*2);
+    if (val == NULL) {
+    printf("Memory allocation failed.\n");
+    exit(EXIT_FAILURE);
+}
+    
+    //int val[2] = {1,1};
     for(int i =0 ; i< 8 ; i++){
-        if(hiker[aroundr+aroundx[i]][aroundc+aroundy[i]]!= INT_MAX && hiker[aroundr+aroundx[i]][aroundc+aroundy[i]] > maxD){
-            maxD = hiker[aroundr+aroundx[i]][aroundc+aroundy[i]];
+        if(hiker[aroundr+aroundx[i]][aroundc+aroundy[i]]!= INT_MAX && hiker[aroundr+aroundx[i]][aroundc+aroundy[i]] < minD){
+            minD = hiker[aroundr+aroundx[i]][aroundc+aroundy[i]];
             val[0] = aroundr+aroundx[i];
             val[1] = aroundc+aroundy[i];
         }
@@ -1158,7 +1176,7 @@ char **printmap(char gate, int index , int mapx , int mapy )
 
             int i = 3+ rand()%17;
             int j = 3+ rand()%76;
-            while(!(map[i][j]!='h' && map[i][j]!='r' && map[i][j]!='p' && map[i][j]!='w' && map[i][j]!='s' && map[i][j]!='e' && map[i][j]!='#' && getHikerWeight(map[i][j],i,j)!= INT_MAX)){
+            while(!(map[i][j]!='@' && map[i][j]!='h' && map[i][j]!='r' && map[i][j]!='p' && map[i][j]!='w' && map[i][j]!='s' && map[i][j]!='e' && map[i][j]!='#' && getHikerWeight(map[i][j],i,j)!= INT_MAX)){
                 i = 3+ rand()%17;
                 j = 3+ rand()%76;
             }
@@ -1169,7 +1187,7 @@ char **printmap(char gate, int index , int mapx , int mapy )
         else if(count == 1){
             int i = 3+ rand()%17;
             int j = 3+ rand()%76;
-            while(!(map[i][j]!='h' && map[i][j]!='r' && map[i][j]!='p' && map[i][j]!='w' && map[i][j]!='s' && map[i][j]!='e' && map[i][j]!='#' && getRivalWeight(map[i][j],i,j)!= INT_MAX)){
+            while(!(map[i][j]!='@' && map[i][j]!='h' && map[i][j]!='r' && map[i][j]!='p' && map[i][j]!='w' && map[i][j]!='s' && map[i][j]!='e' && map[i][j]!='#' && getRivalWeight(map[i][j],i,j)!= INT_MAX)){
                 i = 3+ rand()%17;
                 j = 3+ rand()%76;
             }
@@ -1180,7 +1198,7 @@ char **printmap(char gate, int index , int mapx , int mapy )
             // need to make cost method for each of these NPC types
             int i = 3+ rand()%17;
             int j = 3+ rand()%76;
-            while(!(map[i][j]!='h' && map[i][j]!='r' && map[i][j]!='p' && map[i][j]!='w' && map[i][j]!='s' && map[i][j]!='e' && map[i][j]!='#' && getOtherWeight(map[i][j],i,j)!= INT_MAX)){
+            while(!(map[i][j]!='@' && map[i][j]!='h' && map[i][j]!='r' && map[i][j]!='p' && map[i][j]!='w' && map[i][j]!='s' && map[i][j]!='e' && map[i][j]!='#' && getOtherWeight(map[i][j],i,j)!= INT_MAX)){
                 i = 3+ rand()%17;
                 j = 3+ rand()%76;
             }
@@ -1194,7 +1212,7 @@ char **printmap(char gate, int index , int mapx , int mapy )
                 // need to make cost method for each of these NPC types
             int i = 3+ rand()%17;
             int j = 3+ rand()%76;
-            while(!(map[i][j]!='h' && map[i][j]!='r' && map[i][j]!='p' && map[i][j]!='w' && map[i][j]!='s' && map[i][j]!='e' && map[i][j]!='#' && getOtherWeight(map[i][j],i,j)!= INT_MAX)){
+            while(!(map[i][j]!='@' && map[i][j]!='h' && map[i][j]!='r' && map[i][j]!='p' && map[i][j]!='w' && map[i][j]!='s' && map[i][j]!='e' && map[i][j]!='#' && getOtherWeight(map[i][j],i,j)!= INT_MAX)){
                 i = 3+ rand()%17;
                 j = 3+ rand()%76;
             }
@@ -1206,7 +1224,7 @@ char **printmap(char gate, int index , int mapx , int mapy )
                 // need to make cost method for each of these NPC types
             int i = 3+ rand()%17;
             int j = 3+ rand()%76;
-            while(!(map[i][j]!='h' && map[i][j]!='r' && map[i][j]!='p' && map[i][j]!='w' && map[i][j]!='s' && map[i][j]!='e' && map[i][j]!='#' && getOtherWeight(map[i][j],i,j)!= INT_MAX)){
+            while(!(map[i][j]!='@' && map[i][j]!='h' && map[i][j]!='r' && map[i][j]!='p' && map[i][j]!='w' && map[i][j]!='s' && map[i][j]!='e' && map[i][j]!='#' && getOtherWeight(map[i][j],i,j)!= INT_MAX)){
                 i = 3+ rand()%17;
                 j = 3+ rand()%76;
             }
@@ -1219,7 +1237,7 @@ char **printmap(char gate, int index , int mapx , int mapy )
                 // need to make cost method for each of these NPC types
             int i = 3+ rand()%17;
             int j = 3+ rand()%76;
-            while(!(map[i][j]!='h' && map[i][j]!='r' && map[i][j]!='p' && map[i][j]!='w' && map[i][j]!='s' && map[i][j]!='e' && map[i][j]!='#' && (getOtherWeight(map[i][j],i,j)!= INT_MAX))){
+            while(!(map[i][j]!='@' && map[i][j]!='h' && map[i][j]!='r' && map[i][j]!='p' && map[i][j]!='w' && map[i][j]!='s' && map[i][j]!='e' && map[i][j]!='#' && (getOtherWeight(map[i][j],i,j)!= INT_MAX))){
                 i = 3+ rand()%17;
                 j = 3+ rand()%76;
             }
@@ -1252,11 +1270,15 @@ char **printmap(char gate, int index , int mapx , int mapy )
     int ey = expy[chooseexp];
 
     // Game loop
-    while (game_running) {
+    
         // Process the events occuring in the prirority queue
         
 
-        while (!isEmp(pq)) {
+        while (!(isMyEmpty(pq)) && game_running) {
+            // TEST CODE
+            displayMyQueue(pq);
+            printf("\n");
+            // END TEST CODE
             PQElement minElement = myDequeue(pq);
             int x = minElement.x;
             int y = minElement.y;
@@ -1267,25 +1289,26 @@ char **printmap(char gate, int index , int mapx , int mapy )
        
             int *val = printHmap(map,playerCharacter.x,playerCharacter.y,x,y);
             int newx = val[0];
-            val++;
-            int newy = val[0];
+            int newy = val[1];
             map[x][y] = oldc;
             weight = currentTime + getHikerWeight(map[newx][newy],newx,newy);
             myEnqueue(pq,newx,newy,weight,map[newx][newy]);
             map[newx][newy] = 'h';
+            free(val); // to avoid memorty leak
+            
 
             }else if(map[x][y]=='r'){
 
                  //gradient descent wrt hiker map
        
-            int *val = printHmap(map,playerCharacter.x,playerCharacter.y,x,y);
+            int *val = printRmap(map,playerCharacter.x,playerCharacter.y,x,y);
             int newx = val[0];
-            val++;
-            int newy = val[0];
+            int newy = val[1];
             map[x][y] = oldc;
             weight = currentTime + getRivalWeight(map[newx][newy],newx,newy);
             myEnqueue(pq,newx,newy,weight,map[newx][newy]);
             map[newx][newy] = 'r';
+            free(val); // to avoid memorty leak 
 
         }else if(map[x][y]=='p'){
             
@@ -1339,8 +1362,8 @@ char **printmap(char gate, int index , int mapx , int mapy )
         }else if(map[x][y]=='s'){
             // Wait for action to come to them and stay stationary
             // obviously we change the weight based on current time being updated 
-            weight = currentTime + getOtherWeight(map[x][y],x,y);
-            myEnqueue(pq,x,y,weight,map[x][y]);
+            weight = currentTime + getOtherWeight(oldc,x,y);
+            myEnqueue(pq,x,y,weight,oldc);
         }else if(map[x][y]=='e'){
 
             map[x][y] = oldc;
@@ -1363,9 +1386,7 @@ char **printmap(char gate, int index , int mapx , int mapy )
         }
         currentTime++;   
 
-    }
-
-        // PRINTING BOARD FORMULATED
+              // PRINTING BOARD FORMULATED
         for (int i = 0; i < rows; i++)
     {
 
@@ -1391,10 +1412,14 @@ char **printmap(char gate, int index , int mapx , int mapy )
     }
 
         // Pause to allow observation of updates
-        usleep(250000);  // Sleep for 250 milliseconds (4 frames per second)
+        usleep(2500);  // Sleep for 250 milliseconds (4 frames per second)
+
+    }
+
+  
 
 
-        }
+        
         
        
     
