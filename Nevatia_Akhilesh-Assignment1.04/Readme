@@ -1,0 +1,14 @@
+ COMS S 327: Programming Assignment 4
+
+ Author: Akhilesh Nevatia 
+ 
+ Title: Player Character and Trainers
+
+ Description: This is the fourth assignment based on the Pokemon game. It is a continuation of the previous assignment, where we calcualted the movement 
+ path for hikers and rivals, along with adding other adversary to our game.
+ In this assignment, we take a step ahead and add a player character (@) and other Pokemon trainers. Since the game is driven by a priority queue, all the 
+ characters are placed in the queue and removed according to the time of their next move. We have a total of 7 different kinds of NPC's represented by different
+ annotations. I have used the Dijkstras algorithm to find the shortest and most efficient path for the movement of these characters, and various other void
+ functions to track the positions of the characters on the map.
+
+ The main objective of this assignment is to add the characters and track their movement along with the hkers and rivals.

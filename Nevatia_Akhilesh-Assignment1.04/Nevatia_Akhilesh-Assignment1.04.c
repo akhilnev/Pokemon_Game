@@ -478,7 +478,7 @@ int *printRmap(char map[21][80] ,int row , int col , int aroundr , int aroundc){
 
             int newWeight = INT_MAX;
             if(getRivalWeight(map[x+aroundx[i]][y+aroundy[i]], x + aroundx[i], y + aroundy[i])==INT_MAX){
-                newWeight = INT_MAX;
+                continue;
             }else{
                 newWeight = ((weight) + getRivalWeight(map[x+aroundx[i]][y+aroundy[i]], x + aroundx[i], y + aroundy[i])) % 100;
             }
@@ -511,8 +511,8 @@ int *printRmap(char map[21][80] ,int row , int col , int aroundr , int aroundc){
     exit(EXIT_FAILURE);
 }
     for(int i =0 ; i< 8 ; i++){
-        if(rival[aroundr+aroundx[i]][aroundc+aroundy[i]]!= INT_MAX && rival[aroundr+aroundx[i]][aroundc+aroundy[i]] > maxD){
-            maxD = rival[aroundr+aroundx[i]][aroundc+aroundy[i]];
+        if(rival[aroundr+aroundx[i]][aroundc+aroundy[i]]!= INT_MAX && abs(rival[aroundr+aroundx[i]][aroundc+aroundy[i]] - rival[aroundr][aroundc]) > maxD ){
+            maxD = abs(rival[aroundr+aroundx[i]][aroundc+aroundy[i]] - rival[aroundr][aroundc]);
             val[0] = aroundr+aroundx[i];
             val[1] = aroundc+aroundy[i];
         }
@@ -524,7 +524,7 @@ int *printRmap(char map[21][80] ,int row , int col , int aroundr , int aroundc){
 }
 
 
-int *printHmap(char map[21][80] ,int row , int col , int aroundr , int aroundc){
+int *printHmap(char map[21][80] ,int row , int col , int aroundr , int aroundc, int visitedH[21][80]){
 
 
     //printf("HIKER MAP \n");
@@ -565,19 +565,13 @@ int *printHmap(char map[21][80] ,int row , int col , int aroundr , int aroundc){
         
         visited[x][y] = 1;
         for(int i = 0 ; i < 8 ; i++){
-            int newWeight = INT_MAX;
-            //printf("%c",map[x+aroundx[i]][y+aroundy[i]]);
-            if(getHikerWeight(map[x+aroundx[i]][y+aroundy[i]], x + aroundx[i], y + aroundy[i])==INT_MAX){
-                newWeight = INT_MAX;
-            }else{
-                newWeight = ((weight) + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]], x + aroundx[i], y + aroundy[i])) % 100;
-            }
- 
+           
+            int newWeight = (weight + (getHikerWeight(map[x+aroundx[i]][y+aroundy[i]], x + aroundx[i], y + aroundy[i])))%100 ;
+            
             if(visited[x+aroundx[i]][y+aroundy[i]]== 0 && hiker[x+aroundx[i]][y+aroundy[i]] > newWeight) {
                 //hiker[x+aroundx[i]][y+aroundy[i]] =((weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]] ,x + aroundx[i], y + aroundy[i]))%100);
                 //printf("%c",map[x+aroundx[i]][y+aroundy[i]]);
-                // hiker[x+aroundx[i]][y+aroundy[i]] = (newWeight < 0) ? INT_MAX : newWeight;
-                hiker[x+aroundx[i]][y+aroundy[i]] = newWeight;
+                hiker[x+aroundx[i]][y+aroundy[i]] = (newWeight < 0) ? INT_MAX : newWeight;
                 insert(pq,x+aroundx[i],y+aroundy[i],hiker[x+aroundx[i]][y+aroundy[i]]);
             }
             
@@ -585,12 +579,17 @@ int *printHmap(char map[21][80] ,int row , int col , int aroundr , int aroundc){
     }
 
     // // print the hiker array as a 2d array 
+    // Trying to only print 2 digits but storing the actual distances 
     printf("HIKER MAP\n");
     for(int i = 0 ; i < 21 ; i++){
         for(int j = 0 ; j < 80 ; j++){
             if(hiker[i][j] == INT_MAX) printf("   ");
-            else if(hiker[i][j]==0) printf("00 ");
-            else printf("%2d ",hiker[i][j]);
+            else{
+                hiker[i][j] = hiker[i][j] % 100; 
+                if(hiker[i][j]==0) printf("00 ");
+                else printf("%2d ",hiker[i][j]);
+            }   
+            
         }
         printf("\n");
     }
@@ -607,11 +606,19 @@ int *printHmap(char map[21][80] ,int row , int col , int aroundr , int aroundc){
     printf("Memory allocation failed.\n");
     exit(EXIT_FAILURE);
 }
+
+    val[0] = aroundr;
+    val[1] = aroundc;
     
     //int val[2] = {1,1};
     for(int i =0 ; i< 8 ; i++){
-        if(hiker[aroundr+aroundx[i]][aroundc+aroundy[i]]!= INT_MAX && (abs(hiker[aroundr+aroundx[i]][aroundc+aroundy[i]] - hiker[aroundr][aroundc]) > changeD) && hiker[aroundr+aroundx[i]][aroundc+aroundy[i]]!='@'){
-            changeD = (hiker[aroundr+aroundx[i]][aroundc+aroundy[i]] -hiker[aroundr][aroundc]);
+        int min = INT_MAX;
+        if((hiker[aroundr+aroundx[i]][aroundc+aroundy[i]]!= INT_MAX) && !(hiker[aroundr][aroundc]!= INT_MAX ) && (abs(hiker[aroundr+aroundx[i]][aroundc+aroundy[i]] - hiker[aroundr][aroundc])>changeD) && (map[aroundr+aroundx[i]][aroundc+aroundy[i]]!='@')){
+            changeD = (abs(hiker[aroundr+aroundx[i]][aroundc+aroundy[i]] - hiker[aroundr][aroundc]));
+            printf("h change : %d\n",changeD);
+            printf("hiker future : %d\n",hiker[aroundr+aroundx[i]][aroundc+aroundy[i]]);
+            printf("hiker present : %d\n",hiker[aroundr][aroundc]);
+            min = hiker[aroundr+aroundx[i]][aroundc+aroundy[i]];
             val[0] = aroundr+aroundx[i];
             val[1] = aroundc+aroundy[i];
         }
@@ -1281,6 +1288,7 @@ char **printmap(char gate, int index , int mapx , int mapy )
     int chooseexp = rand()%4;
     int ex = expx[chooseexp];
     int ey = expy[chooseexp];
+    int visitedH[21][80];
 
     // Game loop
     
@@ -1300,7 +1308,7 @@ char **printmap(char gate, int index , int mapx , int mapy )
             if(map[x][y]=='h'){
                 //gradient descent wrt hiker map
        
-            int *val = printHmap(map,playerCharacter.x,playerCharacter.y,x,y);
+            int *val = printHmap(map,playerCharacter.x,playerCharacter.y,x,y,visitedH);
             int newx = val[0];
             int newy = val[1];
             map[x][y] = oldc;
@@ -1425,7 +1433,7 @@ char **printmap(char gate, int index , int mapx , int mapy )
     }
 
         // Pause to allow observation of updates
-        usleep(250000);  // Sleep for 250 milliseconds (4 frames per second)
+        usleep(25000);  // Sleep for 250 milliseconds (4 frames per second)
 
     }
 
