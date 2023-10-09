@@ -476,28 +476,33 @@ int *printRmap(char map[21][80] ,int row , int col , int aroundr , int aroundc){
         visited[x][y] = 1;
         for(int i = 0 ; i < 8 ; i++){
 
-            int newWeight = (weight + getRivalWeight(map[x+aroundx[i]][y+aroundy[i]], x + aroundx[i], y + aroundy[i])) % 100;
+            int newWeight = INT_MAX;
+            if(getRivalWeight(map[x+aroundx[i]][y+aroundy[i]], x + aroundx[i], y + aroundy[i])==INT_MAX){
+                newWeight = INT_MAX;
+            }else{
+                newWeight = ((weight) + getRivalWeight(map[x+aroundx[i]][y+aroundy[i]], x + aroundx[i], y + aroundy[i])) % 100;
+            }
             
             if(visited[x+aroundx[i]][y+aroundy[i]]== 0 && rival[x+aroundx[i]][y+aroundy[i]] > newWeight) {
                 //hiker[x+aroundx[i]][y+aroundy[i]] =((weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]] ,x + aroundx[i], y + aroundy[i]))%100);
                 //printf("%c",map[x+aroundx[i]][y+aroundy[i]]);
-                rival[x+aroundx[i]][y+aroundy[i]] = (newWeight < 0) ? INT_MAX : newWeight;
+                rival[x+aroundx[i]][y+aroundy[i]] = newWeight ;
                 insert(pq,x+aroundx[i],y+aroundy[i],rival[x+aroundx[i]][y+aroundy[i]]);
             }
             
         }
     }
 
-    // // print the hiker array as a 2d array 
-
-    // for(int i = 0 ; i < 21 ; i++){
-    //     for(int j = 0 ; j < 80 ; j++){
-    //         if(rival[i][j] == INT_MAX) printf("   ");
-    //         else if(rival[i][j]==0) printf("00 ");
-    //         else printf("%2d ",rival[i][j]);
-    //     }
-    //     printf("\n");
-    // }
+    // print the hiker array as a 2d array 
+     printf("RIVAL MAP\n");
+    for(int i = 0 ; i < 21 ; i++){
+        for(int j = 0 ; j < 80 ; j++){
+            if(rival[i][j] == INT_MAX) printf("   ");
+            else if(rival[i][j]==0) printf("00 ");
+            else printf("%2d ",rival[i][j]);
+        }
+        printf("\n");
+    }
 
     int maxD = -1;
     int *val = (int *)malloc(sizeof(int)*2);
@@ -560,13 +565,19 @@ int *printHmap(char map[21][80] ,int row , int col , int aroundr , int aroundc){
         
         visited[x][y] = 1;
         for(int i = 0 ; i < 8 ; i++){
-
-            int newWeight = (weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]], x + aroundx[i], y + aroundy[i])) % 100;
-            
+            int newWeight = INT_MAX;
+            //printf("%c",map[x+aroundx[i]][y+aroundy[i]]);
+            if(getHikerWeight(map[x+aroundx[i]][y+aroundy[i]], x + aroundx[i], y + aroundy[i])==INT_MAX){
+                newWeight = INT_MAX;
+            }else{
+                newWeight = ((weight) + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]], x + aroundx[i], y + aroundy[i])) % 100;
+            }
+ 
             if(visited[x+aroundx[i]][y+aroundy[i]]== 0 && hiker[x+aroundx[i]][y+aroundy[i]] > newWeight) {
                 //hiker[x+aroundx[i]][y+aroundy[i]] =((weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]] ,x + aroundx[i], y + aroundy[i]))%100);
                 //printf("%c",map[x+aroundx[i]][y+aroundy[i]]);
-                hiker[x+aroundx[i]][y+aroundy[i]] = (newWeight < 0) ? INT_MAX : newWeight;
+                // hiker[x+aroundx[i]][y+aroundy[i]] = (newWeight < 0) ? INT_MAX : newWeight;
+                hiker[x+aroundx[i]][y+aroundy[i]] = newWeight;
                 insert(pq,x+aroundx[i],y+aroundy[i],hiker[x+aroundx[i]][y+aroundy[i]]);
             }
             
@@ -574,7 +585,7 @@ int *printHmap(char map[21][80] ,int row , int col , int aroundr , int aroundc){
     }
 
     // // print the hiker array as a 2d array 
-
+    printf("HIKER MAP\n");
     for(int i = 0 ; i < 21 ; i++){
         for(int j = 0 ; j < 80 ; j++){
             if(hiker[i][j] == INT_MAX) printf("   ");
@@ -590,7 +601,7 @@ int *printHmap(char map[21][80] ,int row , int col , int aroundr , int aroundc){
     // printf("\n");
 
 
-    int minD = hiker[aroundr][aroundc];
+    int changeD = -1;
     int *val = (int *)malloc(sizeof(int)*2);
     if (val == NULL) {
     printf("Memory allocation failed.\n");
@@ -599,8 +610,8 @@ int *printHmap(char map[21][80] ,int row , int col , int aroundr , int aroundc){
     
     //int val[2] = {1,1};
     for(int i =0 ; i< 8 ; i++){
-        if(hiker[aroundr+aroundx[i]][aroundc+aroundy[i]]!= INT_MAX && hiker[aroundr+aroundx[i]][aroundc+aroundy[i]] < minD){
-            minD = hiker[aroundr+aroundx[i]][aroundc+aroundy[i]];
+        if(hiker[aroundr+aroundx[i]][aroundc+aroundy[i]]!= INT_MAX && (abs(hiker[aroundr+aroundx[i]][aroundc+aroundy[i]] - hiker[aroundr][aroundc]) > changeD) && hiker[aroundr+aroundx[i]][aroundc+aroundy[i]]!='@'){
+            changeD = (hiker[aroundr+aroundx[i]][aroundc+aroundy[i]] -hiker[aroundr][aroundc]);
             val[0] = aroundr+aroundx[i];
             val[1] = aroundc+aroundy[i];
         }
@@ -1157,6 +1168,8 @@ char **printmap(char gate, int index , int mapx , int mapy )
     // Read the number of trainers from the user
     int input_result = scanf("%d", &numtrainers);
 
+    
+
     // If the user entered a number, use that number
 
     //Now using the num trainers to add multiple trainers accordingly 
@@ -1412,7 +1425,7 @@ char **printmap(char gate, int index , int mapx , int mapy )
     }
 
         // Pause to allow observation of updates
-        usleep(2500);  // Sleep for 250 milliseconds (4 frames per second)
+        usleep(250000);  // Sleep for 250 milliseconds (4 frames per second)
 
     }
 
