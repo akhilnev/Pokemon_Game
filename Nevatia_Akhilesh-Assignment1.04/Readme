@@ -1,7 +1,7 @@
  COMS S 327: Programming Assignment 4
 
  Author: Akhilesh Nevatia 
- 
+
  Title: Player Character and Trainers
 
  Description: This is the fourth assignment based on the Pokemon game. It is a continuation of the previous assignment, where we calcualted the movement 
@@ -12,3 +12,6 @@
  functions to track the positions of the characters on the map.
 
  The main objective of this assignment is to add the characters and track their movement along with the hkers and rivals.
+
+ NOTES :
+ numtrainers is standard set to 10 in the makefile and standard sleep time 250000 is used as mentioned in the document !
