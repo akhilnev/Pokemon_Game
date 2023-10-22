@@ -3,7 +3,6 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <limits.h>
-
 #include "io.h"
 #include "character.h"
 #include "poke327.h"
@@ -33,8 +32,7 @@ init_pair(COLOR_YELLOW, COLOR_YELLOW, COLOR_BLACK);
 init_pair(COLOR_BLUE, COLOR_BLUE, COLOR_BLACK);
 init_pair(COLOR_RED, COLOR_RED, COLOR_BLACK);
 init_pair(COLOR_CYAN, COLOR_CYAN, COLOR_BLACK);
-init_pair(COLOR_BROWN, COLOR_BLACK, COLOR_RED); // Brown color pair
-
+init_pair(COLOR_BROWN, COLOR_YELLOW, COLOR_MAGENTA); // Brown color pair
 
 
 }
@@ -163,11 +161,16 @@ uint32_t y, x;
                     mvaddch(y + 1, x, TREE_SYMBOL);
                     attroff(COLOR_PAIR(COLOR_BROWN));
                     break;
+                // case ter_forest:
+                //     attron(COLOR_PAIR(COLOR_GREEN));
+                //     mvaddch(y + 1, x, FOREST_SYMBOL);
+                //     attroff(COLOR_PAIR(COLOR_GREEN));
+                //     break;
                 case ter_forest:
-                    attron(COLOR_PAIR(COLOR_GREEN));
-                    mvaddch(y + 1, x, FOREST_SYMBOL);
-                    attroff(COLOR_PAIR(COLOR_GREEN));
-                    break;
+                  attron(COLOR_PAIR(COLOR_BROWN));  // Set the color to brown
+                  mvaddch(y + 1, x, FOREST_SYMBOL);
+                  attroff(COLOR_PAIR(COLOR_BROWN));  // Reset the color
+                  break;
                 case ter_path:
                     attron(COLOR_PAIR(COLOR_YELLOW));
                     mvaddch(y + 1, x, PATH_SYMBOL);
@@ -214,7 +217,7 @@ uint32_t y, x;
         }
     }
 
-  mvprintw(23, 1, "PC position is (%2d,%2d) on map %d%cx%d%c.",
+  mvprintw(23, 1, "PC position: (%2d,%2d) on the world map: %d%cx%d%c.",
            world.pc.pos[dim_x],
            world.pc.pos[dim_y],
            abs(world.cur_idx[dim_x] - (WORLD_SIZE / 2)),
@@ -223,7 +226,7 @@ uint32_t y, x;
            world.cur_idx[dim_y] - (WORLD_SIZE / 2) <= 0 ? 'N' : 'S');
   mvprintw(22, 1, "%d known %s.", world.cur_map->num_trainers,
            world.cur_map->num_trainers > 1 ? "trainers" : "trainer");
-  mvprintw(22, 30, "Nearest visible trainer: ");
+  mvprintw(22, 30, "Closest Visible Trianer: ");
   if ((c = io_nearest_visible_trainer())) {
     attron(COLOR_PAIR(COLOR_RED));
     mvprintw(22, 55, "%c at vector %d%cx%d%c.",
@@ -293,8 +296,15 @@ static void io_scroll_trainer_list(char (*s)[40], uint32_t count)
   }
 }
 
-static void io_list_trainers_display(character_t **c,
-                                     uint32_t count)
+/**
+ * Displays a list of trainers with their character type, symbol, and position relative to the player character.
+ * If the count of trainers is less than or equal to 13, the list is displayed without scrolling.
+ * If the count of trainers is greater than 13, the list is displayed with scrolling.
+ * 
+ * @param c An array of pointers to character_t structs representing the trainers.
+ * @param count The number of trainers in the array.
+ */
+static void io_list_trainers_display(character_t **c, uint32_t count)
 {
   uint32_t i;
   char (*s)[40]; /* pointer to array of 40 char */
@@ -326,7 +336,7 @@ static void io_list_trainers_display(character_t **c,
 
   if (count <= 13) {
     mvprintw(count + 6, 19, " %-40s ", "");
-    mvprintw(count + 7, 19, " %-40s ", "Hit escape to continue.");
+    mvprintw(count + 7, 19, " %-40s ", "press esc to continue.");
     while (getch() != 27 /* escape */)
       ;
   } else {
