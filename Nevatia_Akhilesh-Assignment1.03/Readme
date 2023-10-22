@@ -1,0 +1,37 @@
+1. Usage and comments for TA :
+
+- Please use "make run" to generate the output or use "make" and then ./PathMaps to get output
+- The hiker and rivals distance map is generated mainly for 0,0 position map but as we traverse n/s/e/w we can still generate correspinding maps
+- I didnt implement Forrest and mountains as I am using my own code and not professors code, thus a bunch of trees are treated as normal trees and a bunch of boulders are treated as normal boulders based on initial generation of maps in Assignment 1.01.
+
+2. Summary of what is to be Done in the Assignment :
+
+The programming assignment, "Path Finding," for COM S 327, Fall 2023, focuses on implementing movement paths for trainers (hikers and rivals) within a game. The trainers will engage with the player character (PC) in the game. The trainers may have different movement capabilities and terrain restrictions.
+
+The goal is to implement the required pathfinding algorithms, calculate movement paths for hikers and rivals, and display the distance maps accordingly. The output should conform to the specified format and provide the necessary functionality for trainers in the game.
+
+3. Key points and requirements of the assignment:
+
+Trainer Types:
+Adversary trainers include those who stand by the road, walk within a region, and chase the PC.
+Two main trainer types for pathfinding are hikers (can go almost anywhere except water) and rivals (cannot walk over rocks, trees, or water).
+
+Terrain and Movement:
+Movement costs through different terrains are defined in terms of game turns.
+Terrain types include Bldr, Tree, Path, PMart, PCntr, TGras, SGras, Water, and Gate.
+Movement can occur in all 8 directions.
+
+Movement Costs:
+Movement costs for hikers and rivals are provided in a table, defining travel times through various terrains.
+
+PC and Terrain:
+The PC is placed randomly on a road (represented as '@').
+The border of the map is marked with impassible terrain to prevent NPCs from accessing it.
+
+Pathfinding:
+Dijkstra's Algorithm or A* is used to calculate the shortest paths from all locations to the PC for hikers and rivals.
+A priority queue is used, ideally with a decrease priority operation.
+
+Implementation and Display:
+The program should display the hiker and rival distance maps, using two digits per distance and displaying distance mod 100 with a space between each distance.
+

@@ -14,4 +14,5 @@
  The main objective of this assignment is to add the characters and track their movement along with the hkers and rivals.
 
  NOTES :
- numtrainers is standard set to 10 in the makefile and standard sleep time 250000 is used as mentioned in the document !
+ - numtrainers is standard set to 10 in the makefile and standard sleep time 250000 is used as mentioned in the document !
+ - please use "make run" to run the program

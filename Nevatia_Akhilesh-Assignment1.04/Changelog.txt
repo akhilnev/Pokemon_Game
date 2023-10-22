@@ -1,0 +1,187 @@
+commit b216176cf006ef45749e3307b2fa858052c3da50
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Mon Oct 9 01:39:04 2023 -0500
+
+     Added working files
+
+commit 5fcac7d4e3cc83de35897a1d49605df4bf6ae275
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Oct 8 23:26:18 2023 -0500
+
+     Still figuring out h and r path to @
+
+commit d7b4d5b46c05444aeaac9a18acfe75608cd6ed42
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Oct 8 21:14:12 2023 -0500
+
+     Still validating routes for hiker and rival
+
+commit c35020efddcc3628b20492328529f5a3ccb3fe71
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Oct 8 20:15:35 2023 -0500
+
+     Cecking hiker and rival movement conditions
+
+commit 4c99646eedd34008aeb76994a5f923702c9ee120
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Oct 8 17:47:24 2023 -0500
+
+     Added logic for all 6 NPC's and am trying to fix conflicting PQ errors between Dijkstra PQ and Movement PQ
+
+commit 5232bfc053f0530588ccf9ab0454d3a4f0663c10
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Oct 8 15:46:55 2023 -0500
+
+     Commiting readme , and a.out ,and other files made
+
+commit e7959983faf6db70a431b971ab3ff64e1ee08d67
+Merge: acd2a2b e022e70
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Oct 8 15:45:46 2023 -0500
+
+    Merge branch 'main' of https://github.com/akhilnev/327
+
+commit acd2a2bd8482c636a142adca3afd154b8eb6936e
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Oct 8 15:41:28 2023 -0500
+
+     Adding the NPC'S and also adding movement routes
+
+commit e022e70c21f00d60f6bcc0adf1695ca4cdf74585
+Author: Akhilesh Nevatia <106297042+akhilnev@users.noreply.github.com>
+Date:   Sun Oct 1 11:39:09 2023 -0500
+
+    Update README.md
+
+commit 74b072bd6fdbf38e793f150f6ff66f819f719fcb
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Oct 1 01:37:06 2023 -0500
+
+     Adding Rivals map , makefile and Working on Readme
+
+commit 82b382d5a029c45999426d411d15bb59d2f0391f
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sat Sep 30 20:48:27 2023 -0500
+
+     Adding new implementation of map
+
+commit a7d074b51d0bdc58c535e30ea10575e6727313fd
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Sep 24 00:05:14 2023 -0500
+
+     Adding Dijkstra function and trying to debug it at the same time
+
+commit ef89eb3c1e350f8a774640bdeaa139f3930f5220
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sat Sep 23 20:26:53 2023 -0500
+
+     Adding Dijkstra implementation , function need to fix infinite loop
+
+commit 006294f729c41886b737f62510255784985997c1
+Merge: fb41f20 f75b3cb
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sat Sep 23 18:16:33 2023 -0500
+
+    Merge branch 'main' of https://github.com/akhilnev/327
+
+commit fb41f200ea52bf8abc3de2f467a428116dd963b6
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sat Sep 23 18:16:20 2023 -0500
+
+     Starting project 1.03 by initializing PC and randomly assigning position in path, adding hiker and rival dijkstra maps which I will now implement
+
+commit f75b3cb7533992ff95560c2fb11f9043e1d3edae
+Author: Akhilesh Nevatia <106297042+akhilnev@users.noreply.github.com>
+Date:   Thu Sep 21 12:30:09 2023 -0500
+
+    Create README.md
+
+commit 7190a2538f8337bdf6c579dc782fba9d003920e6
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Sep 17 22:16:09 2023 -0500
+
+     Adding current map coordinate printer
+
+commit 044dc1fca9d924aaaaae45a8d690fff84c857d29
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Sep 17 22:05:19 2023 -0500
+
+    Adding fixed changes
+
+commit 66f1b41e02875f67407410d2568217266171d12b
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Sep 17 21:27:58 2023 -0500
+
+     Adding Readme , make file and testing boundry conditions
+
+commit 74b35feab1b12dd55a66697dc1e80af1a11eb849
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Sep 17 18:57:30 2023 -0500
+
+     Adding east and west roadsand trying to store their respective pointers
+
+commit 88f6ad0556b5532c0af56fce31069a77e4b5e9c7
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Sep 17 18:29:08 2023 -0500
+
+    Adding methods to move north and south in the grid to new maps and retain old grids by storing their pointers
+
+commit 0a02979e81a923b45c69c4a27634b92919639b9c
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Sep 17 16:48:34 2023 -0500
+
+     Trying to modify the 1.01 function to generate a gate based on my need and not randomly, by adding a char for gate direction and int for which index the gate needs to be at
+
+commit 192c53f8aa8ca246e3d2a9ce66c539ed5b004a06
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Sep 17 15:50:51 2023 -0500
+
+     Generated 401 * 401 pointrers array which is initially initialized as null except for 200,200 position mapwhich is externally treated as 0,0
+
+commit e146f606d4c0737cf3cf06849e4ac8bb0f95930f
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Sep 10 22:10:51 2023 -0500
+
+     Sprinkling boulders around
+
+commit a007d97cee390d1cd0478ce1218baeb5558bb0bc
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Sep 10 20:18:00 2023 -0500
+
+     Changing symbol's meanings
+
+commit 8dd780fa766e35ec2796f26b400c42150bac9d8a
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Sep 10 19:38:46 2023 -0500
+
+     removing duplicate files
+
+commit 30fc80ed709a90fe0413fcdc42f67dfd94db358d
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Sep 10 19:36:47 2023 -0500
+
+     Adding Assigbment 0 files from server to local browser
+
+commit 8a40ae2b3d43c5495c69cac840fe215a79c5458e
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Sep 10 18:50:12 2023 -0500
+
+     Adding Readme and make file
+
+commit f66f507534fbd3165c0f4ef666952d759eff38cc
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Sep 10 18:13:11 2023 -0500
+
+     adding comments for blocks of code to make it understandable
+
+commit 2d2aabaa47430cc7573afef13d7640e3063c9ba8
+Author: akhilesh.nevatia@gmail.com <akhilesh.nevatia@gmail.com>
+Date:   Sun Sep 10 18:10:35 2023 -0500
+
+     Finished adding legend and completed modifying code
+
+commit 1cedda602f2c4630d8282144979fe4fc20fd8064
+Author: Akhilesh Nevatia <106297042+akhilnev@users.noreply.github.com>
+Date:   Sat Sep 9 17:08:11 2023 -0500
+
+    Initial commit

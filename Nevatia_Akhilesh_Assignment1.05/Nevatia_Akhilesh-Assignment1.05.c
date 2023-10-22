@@ -3,43 +3,107 @@
 #include <time.h>
 #include <math.h>
 #include <limits.h>
-#define COLOR_RESET "\x1B[0m"
-#define COLOR_GREEN "\x1B[32m"
-#define COLOR_BLUE "\x1B[34m"
-#define COLOR_RED "\x1B[31m"
-#define COLOR_YELLOW "\x1B[33m"
-#define COLOR_CYAN "\x1B[36m"
-#define COLOR_MAGENTA "\x1B[35m"
+#include <unistd.h>
+#include <signal.h>
+#include <string.h>  
+#include <ncurses.h>
+// #define COLOR_RESET "\x1B[0m"
+// #define COLOR_GREEN "\x1B[32m"
+// #define COLOR_BLUE "\x1B[34m"
+// #define COLOR_RED "\x1B[31m"
+// #define COLOR_YELLOW "\x1B[33m"
+// #define COLOR_CYAN "\x1B[36m"
+// #define COLOR_MAGENTA "\x1B[35m"
 
-void printColoredChar(char character)
-{
-    switch (character)
-    {
-    case '.':
-        printf(COLOR_GREEN "%c" COLOR_RESET, character);
-        break;
-    case '#':
-        printf(COLOR_BLUE "%c" COLOR_RESET, character);
-        break;
-    case ':':
-        printf(COLOR_RED "%c" COLOR_RESET, character);
-        break;
-    case '~':
-        printf(COLOR_CYAN "%c" COLOR_RESET, character);
-        break;
-    case '^':
-        printf(COLOR_YELLOW "%c" COLOR_RESET, character);
-        break;
-    case 'C':
-        printf(COLOR_MAGENTA "%c" COLOR_RESET, character);
-        break;
-    case 'M':
-        printf(COLOR_MAGENTA "%c" COLOR_RESET, character);
-        break;
-    default:
-        printf("%c", character);
+// Define custom color pair IDs
+enum CustomColors {
+    CUSTOM_COLOR_GREEN = 1,
+    CUSTOM_COLOR_BLUE,
+    CUSTOM_COLOR_RED,
+    CUSTOM_COLOR_CYAN,
+    CUSTOM_COLOR_YELLOW,
+    CUSTOM_COLOR_MAGENTA,
+};
+
+void initColors() {
+    if (has_colors()) {
+        start_color();
+        init_pair(CUSTOM_COLOR_GREEN, COLOR_GREEN, COLOR_BLACK);
+        init_pair(CUSTOM_COLOR_BLUE, COLOR_BLUE, COLOR_BLACK);
+        init_pair(CUSTOM_COLOR_RED, COLOR_RED, COLOR_BLACK);
+        init_pair(CUSTOM_COLOR_CYAN, COLOR_CYAN, COLOR_BLACK);
+        init_pair(CUSTOM_COLOR_YELLOW, COLOR_YELLOW, COLOR_BLACK);
+        init_pair(CUSTOM_COLOR_MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
     }
 }
+
+void printColoredChar(char character) {
+    switch (character) {
+        case '.':
+            attron(COLOR_PAIR(CUSTOM_COLOR_GREEN));
+            addch('.');
+            attroff(COLOR_PAIR(CUSTOM_COLOR_GREEN));
+            break;
+        case '#':
+            attron(COLOR_PAIR(CUSTOM_COLOR_BLUE));
+            addch('#');
+            attroff(COLOR_PAIR(CUSTOM_COLOR_BLUE));
+            break;
+        case ':':
+            attron(COLOR_PAIR(CUSTOM_COLOR_RED));
+            addch(':');
+            attroff(COLOR_PAIR(CUSTOM_COLOR_RED));
+            break;
+        case '~':
+            attron(COLOR_PAIR(CUSTOM_COLOR_CYAN));
+            addch('~');
+            attroff(COLOR_PAIR(CUSTOM_COLOR_CYAN));
+            break;
+        case '^':
+            attron(COLOR_PAIR(CUSTOM_COLOR_YELLOW));
+            addch('^');
+            attroff(COLOR_PAIR(CUSTOM_COLOR_YELLOW));
+            break;
+        case 'C':
+        case 'M':
+            attron(COLOR_PAIR(CUSTOM_COLOR_MAGENTA));
+            addch(character);
+            attroff(COLOR_PAIR(CUSTOM_COLOR_MAGENTA));
+            break;
+        default:
+            addch(character);
+    }
+}
+
+// void printColoredChar(char character)
+// {
+//     switch (character)
+//     {
+//     case '.':
+//         printf(COLOR_GREEN "%c" COLOR_RESET, character);
+//         break;
+//     case '#':
+//         printf(COLOR_BLUE "%c" COLOR_RESET, character);
+//         break;
+//     case ':':
+//         printf(COLOR_RED "%c" COLOR_RESET, character);
+//         break;
+//     case '~':
+//         printf(COLOR_CYAN "%c" COLOR_RESET, character);
+//         break;
+//     case '^':
+//         printf(COLOR_YELLOW "%c" COLOR_RESET, character);
+//         break;
+//     case 'C':
+//         printf(COLOR_MAGENTA "%c" COLOR_RESET, character);
+//         break;
+//     case 'M':
+//         printf(COLOR_MAGENTA "%c" COLOR_RESET, character);
+//         break;
+//     default:
+//         printf("%c", character);
+//     }
+// }
 
 
 
@@ -49,17 +113,17 @@ typedef struct {
 } PC;
 
 
-void printLegend()
-{
-    printf("Legend:\n");
-    printf(COLOR_GREEN " . " COLOR_RESET ": Short Grass\n");
-    printf(COLOR_BLUE " # " COLOR_RESET ": Road\n");
-    printf(COLOR_RED " : " COLOR_RESET ": Tall Grass\n");
-    printf(COLOR_CYAN " ~ " COLOR_RESET ": Water\n");
-    printf(COLOR_YELLOW " ^ " COLOR_RESET ": Tree \n");
-    printf(COLOR_MAGENTA " C " COLOR_RESET ": Pokémon Center\n");
-    printf(COLOR_MAGENTA " M " COLOR_RESET ": Pokémon Mart\n");
-}
+// void printLegend()
+// {
+//     printf("Legend:\n");
+//     printf(COLOR_GREEN " . " COLOR_RESET ": Short Grass\n");
+//     printf(COLOR_BLUE " # " COLOR_RESET ": Road\n");
+//     printf(COLOR_RED " : " COLOR_RESET ": Tall Grass\n");
+//     printf(COLOR_CYAN " ~ " COLOR_RESET ": Water\n");
+//     printf(COLOR_YELLOW " ^ " COLOR_RESET ": Tree \n");
+//     printf(COLOR_MAGENTA " C " COLOR_RESET ": Pokémon Center\n");
+//     printf(COLOR_MAGENTA " M " COLOR_RESET ": Pokémon Mart\n");
+// }
 
 // Keeping a track of which map is the current map using custom made Struct which updates and handles edge cases
 
@@ -111,6 +175,106 @@ void updateY(CurrMap *currMap, int newY)
     }
 }
 
+// CREATING PQ TO PLAY CONTINOUS GAME 1.4 
+
+typedef struct {
+    int x;
+    int y;
+    int weight;
+    char c;
+} PQElement;
+
+typedef struct {
+    PQElement *arr;
+    int capacity;
+    int size;
+} MyPriorityQueue;
+
+MyPriorityQueue* createMyPriorityQueue(int capacity) {
+    MyPriorityQueue* pq = (MyPriorityQueue*)malloc(sizeof(MyPriorityQueue));
+    pq->arr = (PQElement*)malloc(sizeof(PQElement) * (capacity + 1));
+    pq->capacity = capacity;
+    pq->size = 0;
+    return pq;
+}
+
+void mySwap(PQElement* a, PQElement* b) {
+    PQElement temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void minMyHeapify(MyPriorityQueue* pq, int idx) {
+    int smallest = idx;
+    int left_child = 2 * idx;
+    int right_child = 2 * idx + 1;
+
+    if (left_child <= pq->size && pq->arr[left_child].weight < pq->arr[smallest].weight)
+        smallest = left_child;
+
+    if (right_child <= pq->size && pq->arr[right_child].weight < pq->arr[smallest].weight)
+        smallest = right_child;
+
+    if (smallest != idx) {
+        mySwap(&pq->arr[idx], &pq->arr[smallest]);
+        minMyHeapify(pq, smallest);
+    }
+}
+
+void myEnqueue(MyPriorityQueue* pq, int x, int y, int weight, char c) {
+    if (pq->size >= pq->capacity) {
+        printf("Priority queue is full.\n");
+        return;
+    }
+
+    pq->size++;
+    pq->arr[pq->size].x = x;
+    pq->arr[pq->size].y = y;
+    pq->arr[pq->size].weight = weight;
+    pq->arr[pq->size].c = c;
+
+    int current = pq->size;
+    while (current > 1 && pq->arr[current].weight < pq->arr[current / 2].weight) {
+        mySwap(&pq->arr[current], &pq->arr[current / 2]);
+        current = current / 2;
+    }
+}
+
+PQElement myDequeue(MyPriorityQueue* pq) {
+    if (pq->size == 0) {
+        printf("Priority queue is empty.\n");
+        PQElement empty;
+        empty.x = -1;
+        empty.y = -1;
+        empty.weight = -1;
+        empty.c = ' ';  // Or any other appropriate value
+        return empty;
+    }
+
+    PQElement min_element = pq->arr[1];
+    pq->arr[1] = pq->arr[pq->size];
+    pq->size--;
+
+    minMyHeapify(pq, 1);
+
+    return min_element;
+}
+
+void displayMyQueue(MyPriorityQueue* pq) {
+    printf("Priority Queue elements (x, y, weight, c):\n");
+    for (int i = 1; i <= pq->size; ++i)
+        printf("(%d, %d, %d, %c) ", pq->arr[i].x, pq->arr[i].y, pq->arr[i].weight, pq->arr[i].c);
+    printf("\n");
+}
+
+int isMyEmpty(MyPriorityQueue* pq) {
+    return pq->size == 0;
+}
+
+int getMySize(MyPriorityQueue* pq) {
+    return pq->size;
+}
+
 
 // CREATING PRIORITY QUEUE TO IMPLEMENT DIJKSTRA 
 
@@ -157,7 +321,7 @@ void minHeapify(PriorityQueue *pq, int idx) {
     }
 }
 
-void insert(PriorityQueue *pq, int row, int column, int weight) {
+void insert(PriorityQueue *pq, int row, int column, int weight){
     if (pq->size >= pq->capacity) {
         printf("Priority queue is full.\n");
         return;
@@ -270,11 +434,78 @@ int getRivalWeight(char symbol, int row, int column){
 
 }
 
-void printRmap(char map[21][80] ,int row , int col){
+// SWIMMER WEIGHT FUNCTION
+int getSwimmerWeight(char symbol, int row, int column) { 
+    
+    int weight = -1;
 
-    printf("RIVAL MAP \n");
+    // Determine weight based on the symbol
+    if (symbol == '%' || symbol == '.' ) {
+        weight = INT_MAX;  // Represents infinity
+    } else if(symbol == '~'){
+        weight = 7;  
+     }else if (symbol == '#') {
+         weight = INT_MAX;
+    } else if (symbol == 'M' || symbol == 'C') {
+        weight = INT_MAX;
+    } else if (symbol == ':') {
+        weight = INT_MAX;
+    } else if (symbol == '^') {
+        weight = INT_MAX;
+    } else {
+        // Handle any other symbols not listed (error condition)
+        weight = INT_MAX;
+    }
+
+    return weight;
+}
+
+// OTHER CHARACTERS WEIGHT FUNCTION
+
+int getOtherWeight(char symbol, int row, int column) { 
+    
+    int weight = -1;
+
+    // Determine weight based on the symbol
+    if (symbol == '%' || symbol == '.' ) {
+        weight = INT_MAX;  // Represents infinity
+    } else if(symbol == '~'){
+        weight = INT_MAX;  
+     }else if (symbol == '#') {
+        if(row==0 || row == 20 || column ==0 || column == 79) weight = INT_MAX;
+        else weight = 10;
+    } else if (symbol == 'M' || symbol == 'C') {
+        weight = 50;
+    } else if (symbol == ':') {
+        weight = 20;
+    } else if (symbol == '^') {
+        weight = 10;
+    } else {
+        // Handle any other symbols not listed (error condition)
+        weight = INT_MAX;
+    }
+
+    return weight;
+}
+
+
+
+// USED TO GET CONSTANT RUNNING GAME WITH CONTROL C TO EXIT
+// Define a flag to indicate if the game should continue running
+int game_running = 1;
+
+// Signal handler for SIGINT (CTRL+C)
+void sigint_handler(int signal) {
+    printf("\nReceived SIGINT. Exiting...\n");
+    game_running = 0;  // Set the flag to exit the game
+}
+
+
+int *printRmap(char map[21][80] ,int row , int col , int aroundr , int aroundc){
+
+    //printf("RIVAL MAP \n");
     // printing the hikermap using dijkstra's algorithm
-    int hiker[21][80];
+    int rival[21][80];
     PriorityQueue *pq = createPriorityQueue(20000); // MAX POSSIBLE STORAGE 
     
     
@@ -288,13 +519,13 @@ void printRmap(char map[21][80] ,int row , int col){
 
       for(int i = 0 ; i < 21 ; i++){
         for(int j = 0 ; j < 80 ; j++){
-            hiker[i][j] = INT_MAX; // EVERYTHING AT INFINITE DISTANCE INITIALLY 
+            rival[i][j] = INT_MAX; // EVERYTHING AT INFINITE DISTANCE INITIALLY 
         }
     }
 
     insert(pq,row,col,0);
 
-    hiker[row][col] = 0; // distance of the source from itself is 0
+    rival[row][col] = 0; // distance of the source from itself is 0
 
     //To implement an 8 - directional search
     int aroundx[] = {0, 1, 0, -1, 1, -1, 1, -1};
@@ -311,35 +542,54 @@ void printRmap(char map[21][80] ,int row , int col){
         visited[x][y] = 1;
         for(int i = 0 ; i < 8 ; i++){
 
-            int newWeight = (weight + getRivalWeight(map[x+aroundx[i]][y+aroundy[i]], x + aroundx[i], y + aroundy[i])) % 100;
+           int newWeight = (weight + (getRivalWeight(map[x+aroundx[i]][y+aroundy[i]], x + aroundx[i], y + aroundy[i]))) ;
             
-            if(visited[x+aroundx[i]][y+aroundy[i]]== 0 && hiker[x+aroundx[i]][y+aroundy[i]] > newWeight) {
-                //hiker[x+aroundx[i]][y+aroundy[i]] =((weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]] ,x + aroundx[i], y + aroundy[i]))%100);
-                //printf("%c",map[x+aroundx[i]][y+aroundy[i]]);
-                hiker[x+aroundx[i]][y+aroundy[i]] = (newWeight < 0) ? INT_MAX : newWeight;
-                insert(pq,x+aroundx[i],y+aroundy[i],hiker[x+aroundx[i]][y+aroundy[i]]);
+            if(visited[x+aroundx[i]][y+aroundy[i]]== 0 && rival[x+aroundx[i]][y+aroundy[i]] > newWeight) {
+                rival[x+aroundx[i]][y+aroundy[i]] = newWeight<0 ? INT_MAX : newWeight ;
+                insert(pq,x+aroundx[i],y+aroundy[i],rival[x+aroundx[i]][y+aroundy[i]]);
             }
             
         }
     }
 
-    // print the hiker array as a 2d array 
+    // // print the hiker array as a 2d array 
+    //  printf("RIVAL MAP\n");
+    // for(int i = 0 ; i < 21 ; i++){
+    //     for(int j = 0 ; j < 80 ; j++){
+    //         if(rival[i][j] == INT_MAX) printf("   ");
+    //         else if(rival[i][j]==0) printf("00 ");
+    //         else printf("%2d ",rival[i][j]%100);
+    //     }
+    //     printf("\n");
+    // }
 
-    for(int i = 0 ; i < 21 ; i++){
-        for(int j = 0 ; j < 80 ; j++){
-            if(hiker[i][j] == INT_MAX) printf("   ");
-            else if(hiker[i][j]==0) printf("00 ");
-            else printf("%2d ",hiker[i][j]);
-        }
-        printf("\n");
+    
+    int *val = (int *)malloc(sizeof(int)*2);
+     if (val == NULL) {
+    printf("Memory allocation failed.\n");
+    exit(EXIT_FAILURE);
+}
+    int min = INT_MAX;
+    for(int i =0 ; i< 8 ; i++){
+         if((aroundr + aroundx[i])>=0 && (aroundr + aroundx[i])<21 && (aroundc + aroundy[i])>=0 && (aroundc + aroundy[i])<80){
+            if(rival[aroundr+aroundx[i]][aroundc+aroundy[i]]!= INT_MAX && (min > rival[aroundr+aroundx[i]][aroundc+aroundy[i]]) && (map[aroundr+aroundx[i]][aroundc+aroundy[i]]!='@')){
+                min = rival[aroundr+aroundx[i]][aroundc+aroundy[i]];
+                val[0] = aroundr+aroundx[i];
+                val[1] = aroundc+aroundy[i];
+            }
+         }
     }
+    
+
+    return val; // return value to which we need to go as array pointer 
 
 }
 
 
-void printHmap(char map[21][80] ,int row , int col){
+int *printHmap(char map[21][80] ,int row , int col , int aroundr , int aroundc){
 
-    printf("HIKER MAP \n");
+
+    //printf("HIKER MAP \n");
     // printing the hikermap using dijkstra's algorithm
     int hiker[21][80];
     PriorityQueue *pq = createPriorityQueue(20000); // MAX POSSIBLE STORAGE 
@@ -377,8 +627,8 @@ void printHmap(char map[21][80] ,int row , int col){
         
         visited[x][y] = 1;
         for(int i = 0 ; i < 8 ; i++){
-
-            int newWeight = (weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]], x + aroundx[i], y + aroundy[i]));
+           
+            int newWeight = (weight + (getHikerWeight(map[x+aroundx[i]][y+aroundy[i]], x + aroundx[i], y + aroundy[i]))) ;
             
             if(visited[x+aroundx[i]][y+aroundy[i]]== 0 && hiker[x+aroundx[i]][y+aroundy[i]] > newWeight) {
                 //hiker[x+aroundx[i]][y+aroundy[i]] =((weight + getHikerWeight(map[x+aroundx[i]][y+aroundy[i]] ,x + aroundx[i], y + aroundy[i]))%100);
@@ -390,22 +640,83 @@ void printHmap(char map[21][80] ,int row , int col){
         }
     }
 
-    // print the hiker array as a 2d array 
+    // // print the hiker array as a 2d array 
+    // Trying to only print 2 digits but storing the actual distances 
+    // printf("HIKER MAP\n");
+    // for(int i = 0 ; i < 21 ; i++){
+    //     for(int j = 0 ; j < 80 ; j++){
+    //         if(hiker[i][j] == INT_MAX) printf("   ");
+    //         else{
+    //             //hiker[i][j] = hiker[i][j] % 100; 
+    //             if(hiker[i][j]==0) printf("00 ");
+    //             else printf("%2d ",hiker[i][j]%100);
+    //         }   
+            
+    //     }
+    //     printf("\n");
+    // }
 
-    for(int i = 0 ; i < 21 ; i++){
-        for(int j = 0 ; j < 80 ; j++){
-            if(hiker[i][j] == INT_MAX) printf("   ");
-            else if(hiker[i][j]==0) printf("00 ");
-            else printf("%2d ",hiker[i][j]%100);
+    
+
+    // printf("\n");
+    // printf("\n");
+
+   
+    int *val = (int *)malloc(sizeof(int)*2);
+     if (val == NULL) {
+    printf("Memory allocation failed.\n");
+    exit(EXIT_FAILURE);
+}
+    int min = INT_MAX;
+    for(int i =0 ; i< 8 ; i++){
+        if((aroundr + aroundx[i])>=0 && (aroundr + aroundx[i])<21 && (aroundc + aroundy[i])>=0 && (aroundc + aroundy[i])<80){
+            if(hiker[aroundr+aroundx[i]][aroundc+aroundy[i]]!= INT_MAX && (min > hiker[aroundr+aroundx[i]][aroundc+aroundy[i]]) && (map[aroundr+aroundx[i]][aroundc+aroundy[i]]!='@')){
+                min = hiker[aroundr+aroundx[i]][aroundc+aroundy[i]];
+                val[0] = aroundr+aroundx[i];
+                val[1] = aroundc+aroundy[i];
+            }
         }
-        printf("\n");
     }
 
-    printf("\n");
-    printf("\n");
+
+//     int changeD = -1;
+//     int *val = (int *)malloc(sizeof(int)*2);
+//     if (val == NULL) {
+//     printf("Memory allocation failed.\n");
+//     exit(EXIT_FAILURE);
+// }
+
+//     val[0] = aroundr;
+//     val[1] = aroundc;
 
 
+//     if(hiker[aroundr][aroundc]==INT_MAX){
+//         int min = INT_MAX;
+//         for(int i = 0 ; i < 8 ; i++){
+//             if((hiker[aroundr+aroundx[i]][aroundc + aroundy[i]]) < min ){
+//                 min = hiker[aroundr+aroundx[i]][aroundc + aroundy[i]];
+//                 val[0] = aroundr+aroundx[i];
+//                 val[1] = aroundc+aroundy[i];
+//             } 
 
+//         }
+            
+//     }else {
+//         int min = INT_MAX;
+//     for(int i =0 ; i< 8 ; i++){
+//         if((hiker[aroundr+aroundx[i]][aroundc+aroundy[i]]!= INT_MAX) && (map[aroundr+aroundx[i]][aroundc+aroundy[i]]!='@') && hiker[aroundr+aroundx[i]][aroundc+aroundy[i]] < min){
+//             min = hiker[aroundr+aroundx[i]][aroundc+aroundy[i]];
+//             val[0] = aroundr+aroundx[i];
+//             val[1] = aroundc+aroundy[i];
+//         }
+//     }
+
+//     }
+    
+    
+//     printf("hiker min : %d\n",hiker[val[0]][val[1]]);
+
+    return val; // return value to which we need to go as array pointer 
 
  }
 
@@ -462,7 +773,6 @@ struct CustomData dequeue(struct Queue *queue)
     {
         queue->rear = NULL;
     }
-
     free(temp);
     return data;
 }
@@ -474,7 +784,8 @@ int isEmpty(struct Queue *queue)
     return queue->front == NULL;
 }
 
-char **printmap(char gate, int index , int mapx , int mapy )
+
+char **printmap(char gate, int index , int mapx , int mapy, int numtrainers )
 {
     PC playerCharacter;
     int rows = 21;
@@ -585,7 +896,7 @@ char **printmap(char gate, int index , int mapx , int mapy )
         map[horzx][horzy] = '#';
         // int Hstarty = rand()%80;
         //PLACING THE PC 
-        int count = rand()%10;
+        int count = 2 + rand()%10;
         int var = 0;
         while (horzy != 79)
         {
@@ -714,6 +1025,8 @@ char **printmap(char gate, int index , int mapx , int mapy )
             map[vertx][verty] = '#'; // so that exit gate exists in the south side
         }
     }
+
+
 
     // ATTACHING POKEMON CENTERS TO THE ROADS
 
@@ -938,6 +1251,353 @@ char **printmap(char gate, int index , int mapx , int mapy )
             }
         }
 
+
+    // // ADDING NPC'S AND THEIR MOVEMENT TOO 
+
+    //  int numtrainers = 10;  // Default number of trainers
+
+    // // Prompt the user for the number of trainers
+    // printf("Enter the number of trainers (--numtrainers), or press Enter for default (10): ");
+    
+    // // Read the number of trainers from the user
+    // int input_result = scanf("%d", &numtrainers);
+
+    
+
+    // If the user entered a number, use that number
+
+    //Now using the num trainers to add multiple trainers accordingly 
+
+    // Add all trainers to a PQ with a cost of 0 initially and then keep increasing based on current time + terraincost 
+
+    int totalTrainers = 0;
+    int count = 0;
+
+    MyPriorityQueue *pq = createMyPriorityQueue(20);
+
+
+    while(totalTrainers<numtrainers){
+        count =count %6;
+        // where to add the specific NPC
+        if(count==0){
+
+            int i = 3+ rand()%17;
+            int j = 3+ rand()%76;
+            while(!(map[i][j]!='@' && map[i][j]!='h' && map[i][j]!='r' && map[i][j]!='p' && map[i][j]!='w' && map[i][j]!='s' && map[i][j]!='e' && map[i][j]!='#' && getHikerWeight(map[i][j],i,j)!= INT_MAX)){
+                i = 3+ rand()%17;
+                j = 3+ rand()%76;
+            }
+            myEnqueue(pq,i,j,0,map[i][j]); // inserts where the character is and we have initialized the character to be at 0 distance from itself
+            map[i][j] = 'h';
+            
+        }
+        else if(count == 1){
+            int i = 3+ rand()%17;
+            int j = 3+ rand()%76;
+            while(!(map[i][j]!='@' && map[i][j]!='h' && map[i][j]!='r' && map[i][j]!='p' && map[i][j]!='w' && map[i][j]!='s' && map[i][j]!='e' && map[i][j]!='#' && getRivalWeight(map[i][j],i,j)!= INT_MAX)){
+                i = 3+ rand()%17;
+                j = 3+ rand()%76;
+            }
+            myEnqueue(pq,i,j,0,map[i][j]); // inserts where the character is and we have initialized the character to be at 0 distance from itself
+            map[i][j] = 'r';
+        }
+        else if(count ==2){
+            // need to make cost method for each of these NPC types
+            int i = 3+ rand()%17;
+            int j = 3+ rand()%76;
+            while(!(map[i][j]!='@' && map[i][j]!='h' && map[i][j]!='r' && map[i][j]!='p' && map[i][j]!='w' && map[i][j]!='s' && map[i][j]!='e' && map[i][j]!='#' && getOtherWeight(map[i][j],i,j)!= INT_MAX)){
+                i = 3+ rand()%17;
+                j = 3+ rand()%76;
+            }
+            myEnqueue(pq,i,j,0,map[i][j]); // inserts where the character is and we have initialized the character to be at 0 distance from itself
+            map[i][j] = 'p';
+
+
+
+        }else if(count ==3){
+
+                // need to make cost method for each of these NPC types
+            int i = 3+ rand()%17;
+            int j = 3+ rand()%76;
+            while(!(map[i][j]!='@' && map[i][j]!='h' && map[i][j]!='r' && map[i][j]!='p' && map[i][j]!='w' && map[i][j]!='s' && map[i][j]!='e' && map[i][j]!='#' && getOtherWeight(map[i][j],i,j)!= INT_MAX)){
+                i = 3+ rand()%17;
+                j = 3+ rand()%76;
+            }
+            myEnqueue(pq,i,j,0,map[i][j]); // inserts where the character is and we have initialized the character to be at 0 distance from itself
+            map[i][j] = 'w';
+
+        }else if(count ==4){
+
+                // need to make cost method for each of these NPC types
+            int i = 3+ rand()%17;
+            int j = 3+ rand()%76;
+            while(!(map[i][j]!='@' && map[i][j]!='h' && map[i][j]!='r' && map[i][j]!='p' && map[i][j]!='w' && map[i][j]!='s' && map[i][j]!='e' && map[i][j]!='#' && getOtherWeight(map[i][j],i,j)!= INT_MAX)){
+                i = 3+ rand()%17;
+                j = 3+ rand()%76;
+            }
+            myEnqueue(pq,i,j,0,map[i][j]); // inserts where the character is and we have initialized the character to be at 0 distance from itself
+
+            map[i][j] = 's';
+
+        }else if(count ==5 ){
+
+                // need to make cost method for each of these NPC types
+            int i = 3+ rand()%17;
+            int j = 3+ rand()%76;
+            while(!(map[i][j]!='@' && map[i][j]!='h' && map[i][j]!='r' && map[i][j]!='p' && map[i][j]!='w' && map[i][j]!='s' && map[i][j]!='e' && map[i][j]!='#' && (getOtherWeight(map[i][j],i,j)!= INT_MAX))){
+                i = 3+ rand()%17;
+                j = 3+ rand()%76;
+            }
+            myEnqueue(pq,i,j,0,map[i][j]); // inserts where the character is and we have initialized the character to be at 0 distance from itself
+            map[i][j] = 'e';
+
+        }
+
+
+
+        totalTrainers++;
+        count++;
+    }
+
+    // Now we have our priority queue with all initial weights organized
+
+    // Register the signal handler for SIGINT (CTRL+C)
+    signal(SIGINT, sigint_handler);
+    int currentTime = 1;
+    int pflag = 0;
+    int wanderx[] = {-1,0,1,0};
+    int wandery[] = {0,1,0,-1};
+    int choosewander = rand()%4;
+    int wx = wanderx[choosewander];
+    int wy = wandery[choosewander];
+    int expx[] = {-1,0,1,0};
+    int expy[] = {0,1,0,-1};
+    int chooseexp = rand()%4;
+    int ex = expx[chooseexp];
+    int ey = expy[chooseexp];
+  
+
+    // Game loop
+    
+        // Process the events occuring in the prirority queue
+
+        initscr();
+        cbreak();
+        keypad(stdscr, TRUE);
+
+        int ch;
+      
+
+        
+        // WEIRD CODE HERE 
+
+        while (!(isMyEmpty(pq)) && game_running && ((ch = getch()) != 'q')){
+
+            // TEST CODE
+            //displayMyQueue(pq);
+            printf("\n");
+            // END TEST CODE
+            printw("You pressed: %c\n", ch);
+            PQElement minElement = myDequeue(pq);
+            int x = minElement.x;
+            int y = minElement.y;
+            char oldc = minElement.c;
+            int weight = minElement.weight;
+            if(map[x][y]=='h'){
+                //gradient descent wrt hiker map
+       
+            int *val = printHmap(map,playerCharacter.x,playerCharacter.y,x,y);
+            int newx = val[0];
+            int newy = val[1];
+            if(map[newx][newy]=='@') {
+                weight+=currentTime;
+                myEnqueue(pq,x,y,weight,map[x][y]);
+                free(val);
+                continue;
+            }
+            map[x][y] = oldc;
+            weight = currentTime + getHikerWeight(map[newx][newy],newx,newy);
+            myEnqueue(pq,newx,newy,weight,map[newx][newy]);
+            map[newx][newy] = 'h';
+            free(val); // to avoid memorty leak
+            
+
+            }else if(map[x][y]=='r'){
+
+                 //gradient descent wrt hiker map
+       
+            int *val = printRmap(map,playerCharacter.x,playerCharacter.y,x,y);
+            int newx = val[0];
+            int newy = val[1];
+            if(map[newx][newy]=='@') {
+                weight+=currentTime;
+                myEnqueue(pq,x,y,weight,map[x][y]);
+                free(val);
+                continue;
+            }
+            map[x][y] = oldc;
+            weight = currentTime + getRivalWeight(map[newx][newy],newx,newy);
+            myEnqueue(pq,newx,newy,weight,map[newx][newy]);
+            map[newx][newy] = 'r';
+            free(val); // to avoid memorty leak 
+
+        }else if(map[x][y]=='p'){
+            
+            if(pflag==0){
+                if(getOtherWeight(map[x][y+1],x,y+1)!=INT_MAX){
+                    map[x][y] = oldc;
+                    weight = currentTime + getOtherWeight(map[x][y+1],x,y+1);
+                    myEnqueue(pq,x,y+1,weight,map[x][y+1]);
+                    map[x][y+1] = 'p';
+                }else{
+                    pflag = 1;
+                    map[x][y] = oldc;
+                    weight = currentTime + getOtherWeight(map[x][y-1],x,y-1);
+                    myEnqueue(pq,x,y-1,weight,map[x][y-1]);
+                    map[x][y-1] = 'p';
+                }
+            }else{
+                if(getOtherWeight(map[x][y-1],x,y-1)!=INT_MAX){
+                    map[x][y] = oldc;
+                    weight = currentTime + getOtherWeight(map[x][y-1],x,y-1);
+                    myEnqueue(pq,x,y-1,weight,map[x][y-1]);
+                    map[x][y-1] = 'p';
+                }else{
+                    pflag = 0;
+                    map[x][y] = oldc;
+                    weight = currentTime + getOtherWeight(map[x][y+1],x,y+1);
+                    myEnqueue(pq,x,y+1,weight,map[x][y+1]);
+                    map[x][y+1] = 'p';
+                }
+
+            }
+        }else if(map[x][y]=='w'){
+
+            map[x][y] = oldc;
+            if(map[x+wx][y+wy]==oldc){
+                weight = currentTime + getOtherWeight(map[x+wx][y+wy],x+wx,y+wy);
+                myEnqueue(pq,x+wx,y+wy,weight,map[x+wx][y+wy]);
+                map[x+wx][y+wy] = 'w';
+            }else{
+                while(map[x+wx][y+wy]!=oldc){
+                    choosewander = rand()%4;
+                    wx = wanderx[choosewander];
+                    wy = wandery[choosewander];
+                }
+                weight = currentTime + getOtherWeight(map[x+wx][y+wy],x+wx,y+wy);
+                myEnqueue(pq,x+wx,y+wy,weight,map[x+wx][y+wy]);
+                map[x+wx][y+wy] = 'w';
+
+            }
+
+        }else if(map[x][y]=='s'){
+            // Wait for action to come to them and stay stationary
+            // obviously we change the weight based on current time being updated 
+            weight = currentTime + getOtherWeight(oldc,x,y);
+            myEnqueue(pq,x,y,weight,oldc);
+        }else if(map[x][y]=='e'){
+
+            map[x][y] = oldc;
+            if(getOtherWeight(map[x+ex][y+ey],x+ex,y+ey)!=INT_MAX){
+                weight = currentTime + getOtherWeight(map[x+ex][y+ey],x+ex,y+ey);
+                myEnqueue(pq,x+ex,y+ey,weight,map[x+ex][y+ey]);
+                map[x+ex][y+ey] = 'e';
+            }else{
+                while(getOtherWeight(map[x+ex][y+ey],x+ex,y+ey)==INT_MAX){
+                    chooseexp = rand()%4;
+                    ex = expx[chooseexp];
+                    ey = expy[chooseexp];
+                }
+                weight = currentTime + getOtherWeight(map[x+ex][y+ey],x+ex,y+ey);
+                myEnqueue(pq,x+ex,y+ey,weight,map[x+ex][y+ey]);
+                map[x+ex][y+ey] = 'e';
+
+            }
+
+        }
+        currentTime++;   
+
+    //           // PRINTING BOARD FORMULATED
+    //     for (int i = 0; i < rows; i++)
+    // {
+
+    //     for (int j = 0; j < cols; j++)
+    //     {
+    //         // SWITCH TREE AND SHORT GRASS SYMBOLS WITH TREE AS SHORT GRASS WAS USED AS PLACE HOLDER IN CODE INITIALLY
+    //         if (map[i][j] == '^')
+    //         {
+
+    //             printColoredChar('.');
+    //         }
+    //         else if (map[i][j] == '.')
+    //         {
+
+    //             printColoredChar('^');
+    //         }
+    //         else
+    //         {
+    //             printColoredChar(map[i][j]);
+    //         }
+    //     }
+    //     printf("\n");
+    // }
+
+
+
+
+
+
+
+// USING CURSES TRYING
+          initscr();
+    initColors();
+
+    // Disable cursor visibility (optional)
+    curs_set(0);
+
+    // Define your map (assuming map is a 2D array with your game board)
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (map[i][j] == '^') {
+                printColoredChar('.');
+            } else if (map[i][j] == '.') {
+                printColoredChar('^');
+            } else {
+                printColoredChar(map[i][j]);
+            }
+        }
+        addch('\n');  // Add a newline after each row
+    }
+
+    // Refresh the screen to display the board
+    refresh();
+
+    // Wait for user input or do other processing as needed
+
+    // Terminate Curses
+    //getch();
+    //endwin();
+
+
+
+
+ // Pause to allow observation of updates
+        usleep(250000);  // Sleep for 250 milliseconds (4 frames per second)
+
+
+    }
+
+  endwin();
+
+
+        
+        
+       
+    
+    
+
+
     // PRINTING BOARD FORMULATED
 
     for (int i = 0; i < rows; i++)
@@ -965,9 +1625,9 @@ char **printmap(char gate, int index , int mapx , int mapy )
     }
 
     
-    printHmap(map, playerCharacter.x, playerCharacter.y);
+    //printHmap(map, playerCharacter.x, playerCharacter.y);
 
-    printRmap(map, playerCharacter.x, playerCharacter.y);
+    //printRmap(map, playerCharacter.x, playerCharacter.y);
     
 
     // Allocate memory for a 2D char array
@@ -997,10 +1657,12 @@ char **printmap(char gate, int index , int mapx , int mapy )
 
 
 
+
+
 // MOVING AROUND TO DIFFERENT MAPS FUNCTION 
 
 
-void MapToMap()
+void MapToMap(int numtrainers)
 {
 
     char **mapArray[401][401];
@@ -1011,7 +1673,7 @@ void MapToMap()
         for (int j = 0; j < 401; j++)
         {
             if (i == 200 && j == 200)
-                mapArray[i][j] = printmap(' ', -1,200,200); // 0, 0 in the map
+                mapArray[i][j] = printmap(' ', -1,200,200,numtrainers); // 0, 0 in the map
             else
                 mapArray[i][j] = NULL;
         }
@@ -1052,7 +1714,7 @@ void MapToMap()
             // gives the coordintes we want to store the pointer of
             if (mapArray[x][y] == NULL)
             {
-                mapArray[x][y] = printmap('s', gateIndex , currentMap.x, currentMap.y); // need to modify this to take in specific gate posiions to generate
+                mapArray[x][y] = printmap('s', gateIndex , currentMap.x, currentMap.y,numtrainers); // need to modify this to take in specific gate posiions to generate
             }
             else
             {
@@ -1108,7 +1770,7 @@ void MapToMap()
 
             if (mapArray[x][y] == NULL)
             {
-                mapArray[x][y] = printmap('n', gateIndex,currentMap.x,currentMap.y); // need to modify this to take in specific gate posiions to generate
+                mapArray[x][y] = printmap('n', gateIndex,currentMap.x,currentMap.y,numtrainers); // need to modify this to take in specific gate posiions to generate
             }
             else
             {
@@ -1164,7 +1826,7 @@ void MapToMap()
 
             if (mapArray[x][y] == NULL)
             {
-                mapArray[x][y] = printmap('w', gateIndex,currentMap.x,currentMap.y); // need to modify this to take in specific gate posiions to generate
+                mapArray[x][y] = printmap('w', gateIndex,currentMap.x,currentMap.y,numtrainers); // need to modify this to take in specific gate posiions to generate
             }
             else
             {
@@ -1218,7 +1880,7 @@ void MapToMap()
 
             if (mapArray[x][y] == NULL)
             {
-                mapArray[x][y] = printmap('e', gateIndex,currentMap.x,currentMap.y); // need to modify this to take in specific gate posiions to generate
+                mapArray[x][y] = printmap('e', gateIndex,currentMap.x,currentMap.y,numtrainers); // need to modify this to take in specific gate posiions to generate
             }
             else
             {
@@ -1269,7 +1931,7 @@ void MapToMap()
 
             if (mapArray[x][y] == NULL)
             {
-                mapArray[x][y] = printmap(' ', -1,currentMap.x,currentMap.y); // need to modify this to take in specific gate posiions to generate
+                mapArray[x][y] = printmap(' ', -1,currentMap.x,currentMap.y,numtrainers); // need to modify this to take in specific gate posiions to generate
             }
             else
             {
@@ -1363,9 +2025,25 @@ void MapToMap()
 int main(int argc, char *argv[])
 {
 
-    printLegend();
+    //printLegend();
 
-    MapToMap();
+    int numtrainers = 10;  // Default number of trainers
+
+     for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "--numtrainers") == 0) {
+            if (i + 1 < argc) {
+                numtrainers = atoi(argv[i + 1]);
+                break;
+            } else {
+                printf("Invalid usage of --numtrainers. Using default value.\n");
+            }
+        }
+    }
+
+    printf("Number of trainers: %d\n", numtrainers);
+
+
+    MapToMap(numtrainers);
 
 
     return 0;
