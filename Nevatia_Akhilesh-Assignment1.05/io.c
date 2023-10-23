@@ -379,14 +379,14 @@ static void io_list_trainers()
 
 void io_pokemart()
 {
-  mvprintw(0, 0, "Hello you have entered the Pokemart!");
+  mvprintw(0, 0, "Hello you have entered the Pokemart! Need to stock up on a few PokeBalls? ");
   refresh();
   getch();
 }
 
 void io_pokemon_center()
 {
-  mvprintw(0, 0, "Hello You have entered the PokeCenter!");
+  mvprintw(0, 0, "Hello You have entered the PokeCenter! Ready to train? ");
   refresh();
   getch();
 }
