@@ -1,0 +1,25 @@
+Notes to TA for 1.05: 
+
+- Please use "make run" to directly run the game, or make and then ./poke327 , and use "make clean" to remove any old executables 
+
+Game Development: Poke327 is an evolving game project, and in this version (1.05), several new features and improvements have been made.
+
+User Interface: A user interface has been added to allow manual control of the player character, represented by the "@" symbol.
+
+Ncurses Library: The project now uses the Ncurses library to provide unbuffered input and enhance the user interface for better gameplay.
+
+Game Rules: Certain game rules have been established, including limitations on player character and NPC movements around the map.
+
+Keyboard Controls: The game allows you to control your character through specific keyboard commands, and actions are executed immediately upon key-press.
+
+Battle Interface: When your character or an NPC encounters an opponent, a placeholder Pokemon Battle interface is triggered, which allows for a quick escape.
+
+Special Powers: Any special powers or abilities your character previously had, such as moving through obstacles, are no longer in effect.
+
+Buildings: Players can enter buildings like Pokémarts or Pokémon Centers when standing on them. For now, a placeholder interface is available.
+
+Trainer List: You can view a list of trainers on the map, including their symbols and positions relative to your character.
+
+Game Pausing: The game now pauses automatically for input, and Ncurses handles redrawing, resulting in a smoother gaming experience.
+
+Color: The project has implemented color for terrain and characters, enhancing the visual appe
