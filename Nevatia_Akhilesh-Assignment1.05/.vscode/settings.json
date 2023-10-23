@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "heap.h": "c",
+        "unistd.h": "c",
+        "ncurses.h": "c",
+        "ctype.h": "c"
+    }
+}

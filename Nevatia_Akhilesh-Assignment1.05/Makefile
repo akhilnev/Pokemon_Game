@@ -6,7 +6,8 @@ CFLAGS = -Wall -Werror -ggdb
 LDFLAGS = -lncurses
 
 # Source files
-SRCS = poke327.c character.c io.c heap.c
+# SRCS = Nevatia_Akhilesh_Assignment-1.05.c character.c io.c heap.c
+ SRCS = testme.c heap.c
 
 # Object files
 OBJS = $(SRCS:.c=.o)
