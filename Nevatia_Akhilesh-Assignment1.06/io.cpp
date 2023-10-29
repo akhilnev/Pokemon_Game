@@ -469,22 +469,45 @@ void io_teleport_world(pair_t dest)
    * values and accept their updates only if in range.                */
 
 
-int x = INT_MAX, y = INT_MAX;
+// int x = INT_MAX, y = INT_MAX;
   
-  world.cur_map->cmap[world.pc.pos[dim_y]][world.pc.pos[dim_x]] = NULL;
+//   world.cur_map->cmap[world.pc.pos[dim_y]][world.pc.pos[dim_x]] = NULL;
 
-  echo();
-  curs_set(1);
-  do {
-    mvprintw(0, 0, "Enter -200<=x<=200:           ");
+//   echo();
+//   curs_set(1);
+//   do {
+//     mvprintw(0, 0, "Enter -200<=x<=200:           ");
+//     refresh();
+//     mvscanw(0, 21, "%d", &x);
+//   } while (x < -200 || x > 200);
+//   do {
+//     mvprintw(0, 0, "Enter -200<=y<=200:          ");
+//     refresh();
+//     mvscanw(0, 21, "%d", &y);
+//   } while (y < -200 || y > 200);
+
+
+int x = INT_MAX, y = INT_MAX;
+char formatX[] = "%d";
+char formatY[] = "%d";
+  
+world.cur_map->cmap[world.pc.pos[dim_y]][world.pc.pos[dim_x]] = NULL;
+
+echo();
+curs_set(1);
+
+do {
+    mvprintw(0, 0, "Enter -200 <= x <= 200:           ");
     refresh();
-    mvscanw(0, 21, "%d", &x);
-  } while (x < -200 || x > 200);
-  do {
-    mvprintw(0, 0, "Enter -200<=y<=200:          ");
+    mvscanw(0, 21, formatX, &x);
+} while (x < -200 || x > 200);
+
+do {
+    mvprintw(0, 0, "Enter -200 <= y <= 200:          ");
     refresh();
-    mvscanw(0, 21, "%d", &y);
-  } while (y < -200 || y > 200);
+    mvscanw(0, 21, formatY, &y);
+} while (y < -200 || y > 200);
+
 
 // int x, y = INT_MAX;
 // const char *x_str; 
