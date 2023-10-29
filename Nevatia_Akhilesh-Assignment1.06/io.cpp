@@ -463,29 +463,6 @@ uint32_t move_pc_dir(uint32_t input, pair_t dest)
 
 void io_teleport_world(pair_t dest)
 {
-  /* mvscanw documentation is unclear about return values.  I believe *
-   * that the return value works the same way as scanf, but instead   *
-   * of counting on that, we'll initialize x and y to out of bounds   *
-   * values and accept their updates only if in range.                */
-
-
-// int x = INT_MAX, y = INT_MAX;
-  
-//   world.cur_map->cmap[world.pc.pos[dim_y]][world.pc.pos[dim_x]] = NULL;
-
-//   echo();
-//   curs_set(1);
-//   do {
-//     mvprintw(0, 0, "Enter -200<=x<=200:           ");
-//     refresh();
-//     mvscanw(0, 21, "%d", &x);
-//   } while (x < -200 || x > 200);
-//   do {
-//     mvprintw(0, 0, "Enter -200<=y<=200:          ");
-//     refresh();
-//     mvscanw(0, 21, "%d", &y);
-//   } while (y < -200 || y > 200);
-
 
 int x = INT_MAX, y = INT_MAX;
 char formatX[] = "%d";
@@ -497,38 +474,17 @@ echo();
 curs_set(1);
 
 do {
-    mvprintw(0, 0, "Enter -200 <= x <= 200:           ");
+    mvprintw(0, 0, "x b/w [-200,200]:");
     refresh();
     mvscanw(0, 21, formatX, &x);
 } while (x < -200 || x > 200);
 
 do {
-    mvprintw(0, 0, "Enter -200 <= y <= 200:          ");
+    mvprintw(0, 0, "y b/w [-200,200]");
     refresh();
     mvscanw(0, 21, formatY, &y);
 } while (y < -200 || y > 200);
 
-
-// int x, y = INT_MAX;
-// const char *x_str; 
-// const char *y_str; 
-// world.cur_map->cmap[world.pc.pos[dim_y]][world.pc.pos[dim_x]] = NULL;
-// echo();
-// curs_set(1);
-
-// do {
-//     mvprintw(0, 0, "Enter x [-200, 200]:           ");
-//     refresh();
-//     mvscanw(0, 21, "%s", x_str); // Use the non-const character array
-//     x = atoi(x_str); // Convert the entered string to an integer
-// } while (x < -200 || x > 200);
-
-// do {
-//     mvprintw(0, 0, "Enter y [-200, 200]:           ");
-//     refresh();
-//     mvscanw(0, 21, "%s", y_str); // Use the non-const character array
-//     y = atoi(y_str); // Convert the entered string to an integer
-// } while (y < -200 || y > 200);
 
   refresh();
   noecho();

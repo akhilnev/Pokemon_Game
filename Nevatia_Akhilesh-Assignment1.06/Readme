@@ -1,0 +1,21 @@
+Overview of 1.06 
+This project revisits the creation of a world full of maps and the implementation of movement between these maps. The functionality of moving through gates will be reintroduced behind a new Curses-based user interface. The player character (PC) will be able to navigate through gates into the adjacent maps, positioned on the road square corresponding to the gate's location.
+
+Gate Movement
+PC Movement: The PC can move into a gate, transferring to the adjacent map by positioning the PC at the road square opposite the gate's location.
+NPCs: Non-Player Characters cannot move through gates.
+Turn Queues: Maintain turn queues per map. Time doesn't progress in maps where the PC is absent.
+Flying Mechanism
+Implementing the 'fly' command through the Curses interface, similar to version 1.02.
+The 'f' command triggers the flying action, allowing the player to input X and Y coordinates to relocate within the destination map (commonly on the road).
+Turn queues and NPC positions remain consistent even while flying.
+Porting to C++
+Renaming C files to .cpp extensions, adjusting the makefile for compilation with C++.
+Major structs in the game to be transformed into classes, including map and character structures.
+Pseudo-object-oriented design of character t to be replaced by C++ class inheritance, with pc and npc inheriting from character.
+No alterations needed in heap.h and heap.c as they already support C++ syntax.
+
+
+Notes to TA : 
+- Please do "make all" to run the files and then "./poke327" to get the output
+- Please do "make clean" to remove all executables which have been made before 
