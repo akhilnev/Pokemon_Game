@@ -11,7 +11,6 @@
 #include <limits.h>
 #include <ncurses.h>
 #include <ctype.h>
-
 #include "heap.h"
 #define COLOR_BROWN 9 
 
@@ -436,19 +435,20 @@ uint32_t y, x;
         }
     }
 
-  mvprintw(23, 1, "PC position: (%2d,%2d) on the world map: %d%cx%d%c.",
-           world.pc.pos[dim_x],
-           world.pc.pos[dim_y],
-           abs(world.cur_idx[dim_x] - (WORLD_SIZE / 2)),
-           world.cur_idx[dim_x] - (WORLD_SIZE / 2) >= 0 ? 'E' : 'W',
-           abs(world.cur_idx[dim_y] - (WORLD_SIZE / 2)),
-           world.cur_idx[dim_y] - (WORLD_SIZE / 2) <= 0 ? 'N' : 'S');
-  mvprintw(22, 1, "%d known %s.", world.cur_map->num_trainers,
-           world.cur_map->num_trainers > 1 ? "trainers" : "trainer");
-  mvprintw(22, 30, "Closest Visible Trianer: ");
+  // mvprintw(23, 1, "PC position: (%2d,%2d) on the world map: %d%cx%d%c.",
+  //          world.pc.pos[dim_x],
+  //          world.pc.pos[dim_y],
+  //          abs(world.cur_idx[dim_x] - (WORLD_SIZE / 2)),
+  //          world.cur_idx[dim_x] - (WORLD_SIZE / 2) >= 0 ? 'E' : 'W',
+  //          abs(world.cur_idx[dim_y] - (WORLD_SIZE / 2)),
+  //          world.cur_idx[dim_y] - (WORLD_SIZE / 2) <= 0 ? 'N' : 'S');
+  // mvprintw(22, 1, "%d known %s.", world.cur_map->num_trainers,
+  //          world.cur_map->num_trainers > 1 ? "trainers" : "trainer");
+  // mvprintw(22, 30, "Closest Visible Trianer: ");
   if ((c = io_nearest_visible_trainer())) {
     attron(COLOR_PAIR(COLOR_RED));
-    mvprintw(22, 55, "%c at vector %d%cx%d%c.",
+    //22, 55, "%c at vector %d%cx%d%c.
+    mvprintw(22, 55, "",
              c->symbol,
              abs(c->pos[dim_y] - world.pc.pos[dim_y]),
              ((c->pos[dim_y] - world.pc.pos[dim_y]) <= 0 ?
