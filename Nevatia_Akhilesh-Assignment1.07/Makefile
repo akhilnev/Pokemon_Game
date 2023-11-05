@@ -3,10 +3,8 @@ CXX = g++
 ECHO = echo
 RM = rm -f
 
-TERM = "S2023"
-
-CFLAGS = -Wall -Werror -ggdb -funroll-loops -DTERM=$(TERM)
-CXXFLAGS = -Wall -Werror -ggdb -funroll-loops -DTERM=$(TERM)
+CFLAGS = -Wall -Werror -ggdb -funroll-loops 
+CXXFLAGS = -Wall -Werror -ggdb -funroll-loops 
 
 LDFLAGS = -lncurses
 
@@ -29,15 +27,9 @@ $(BIN): $(OBJS)
 	@$(ECHO) Compiling $<
 	@$(CXX) $(CXXFLAGS) -MMD -MF $*.d -c $<
 
-.PHONY: all clean clobber etags
-
 clean:
 	@$(ECHO) Removing all generated files
 	@$(RM) *.o $(BIN) *.d TAGS core vgcore.* gmon.out
-
-clobber: clean
-	@$(ECHO) Removing backup files
-	@$(RM) *~ \#* *pgm
 
 
 

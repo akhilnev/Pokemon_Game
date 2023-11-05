@@ -83,8 +83,7 @@ void db_parse(bool print, const char *filename)
     
   }
 
-  //No error checking on file load from here on out.  Missing
-  //files are "user error".
+
   prefix_len = strlen(prefix);
 
   prefix = (char *) realloc(prefix, prefix_len + strlen("pokemon.csv") + 1);
@@ -92,7 +91,7 @@ void db_parse(bool print, const char *filename)
   
   f = fopen(prefix, "r");
 
-  //No null byte copied here, so prefix is not technically a string anymore.
+
   prefix = (char *) realloc(prefix, prefix_len + 1);
 
   fgets(line, 80, f);
