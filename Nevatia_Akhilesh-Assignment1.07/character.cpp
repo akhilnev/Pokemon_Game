@@ -4,10 +4,12 @@
 #include "poke327.h"
 #include "io.h"
 
-// switching to classes
 /* Just to make the following table fit in 80 columns */
 #define IM INT_MAX
-
+/* Swimmers are not allowed to move onto paths in general, and this *
+ * is governed by the swimmer movement code.  However, paths over   *
+ * or adjacent to water are bridges.  They can't have inifinite     *
+ * movement cost, or it throws a wrench into the turn queue.        */
 int32_t move_cost[num_character_types][num_terrain_types] = {
 //  boulder,tree,path,mart,center,grass,clearing,mountain,forest,water,gate
   { IM, IM, 10, 10, 10, 20, 10, IM, IM, IM, 10 },
@@ -40,7 +42,17 @@ void pathfind(map_t *m);
 
 uint32_t can_see(map_t *m, character *voyeur, character *exhibitionist)
 {
+  /* Application of Bresenham's Line Drawing Algorithm.  If we can draw a   *
+   * line from v to e without intersecting any foreign terrain, then v can  *
+   * see * e.  Unfortunately, Bresenham isn't symmetric, so line-of-sight   *
+   * based on this approach is not reciprocal (Helmholtz Reciprocity).      *
+   * This is a very real problem in roguelike games, and one we're going to *
+   * ignore for now.  Algorithms that are symmetrical are far more          *
+   * expensive.                                                             */
 
+  /* Adapted from rlg327.  For the purposes of poke327, can swimmers see    *
+   * the PC adjacent to water or on a bridge?  v is always a swimmer, and e *
+   * is always the player character.                                        */
 
   pair_t first, second;
   pair_t del, f;

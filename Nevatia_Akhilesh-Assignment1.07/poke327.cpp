@@ -13,6 +13,7 @@
 #include "poke327.h"
 #include "character.h"
 #include "io.h"
+#include "db_parse.h"
 
 typedef struct queue_node {
   int x, y;
@@ -1147,6 +1148,9 @@ int main(int argc, char *argv[])
   //  int x, y;
   int i;
 
+  db_parse(false);
+  return 0;
+  
   do_seed = 1;
   
   if (argc > 1) {
@@ -1191,7 +1195,66 @@ int main(int argc, char *argv[])
 
   /* print_hiker_dist(); */
   
+  /*
+  do {
+    print_map();  
+    printf("Current position is %d%cx%d%c (%d,%d).  "
+           "Enter command: ",
+           abs(world.cur_idx[dim_x] - (WORLD_SIZE / 2)),
+           world.cur_idx[dim_x] - (WORLD_SIZE / 2) >= 0 ? 'E' : 'W',
+           abs(world.cur_idx[dim_y] - (WORLD_SIZE / 2)),
+           world.cur_idx[dim_y] - (WORLD_SIZE / 2) <= 0 ? 'N' : 'S',
+           world.cur_idx[dim_x] - (WORLD_SIZE / 2),
+           world.cur_idx[dim_y] - (WORLD_SIZE / 2));
+    scanf(" %c", &c);
+    switch (c) {
+    case 'n':
+      if (world.cur_idx[dim_y]) {
+        world.cur_idx[dim_y]--;
+        new_map();
+      }
+      break;
+    case 's':
+      if (world.cur_idx[dim_y] < WORLD_SIZE - 1) {
+        world.cur_idx[dim_y]++;
+        new_map();
+      }
+      break;
+    case 'e':
+      if (world.cur_idx[dim_x] < WORLD_SIZE - 1) {
+        world.cur_idx[dim_x]++;
+        new_map();
+      }
+      break;
+    case 'w':
+      if (world.cur_idx[dim_x]) {
+        world.cur_idx[dim_x]--;
+        new_map();
+      }
+      break;
+     case 'q':
+      break;
+    case 'f':
+      scanf(" %d %d", &x, &y);
+      if (x >= -(WORLD_SIZE / 2) && x <= WORLD_SIZE / 2 &&
+          y >= -(WORLD_SIZE / 2) && y <= WORLD_SIZE / 2) {
+        world.cur_idx[dim_x] = x + (WORLD_SIZE / 2);
+        world.cur_idx[dim_y] = y + (WORLD_SIZE / 2);
+        new_map();
+      }
+      break;
+    case '?':
+    case 'h':
+      printf("Move with 'e'ast, 'w'est, 'n'orth, 's'outh or 'f'ly x y.\n"
+             "Quit with 'q'.  '?' and 'h' print this help message.\n");
+      break;
+    default:
+      fprintf(stderr, "%c: Invalid input.  Enter '?' for help.\n", c);
+      break;
+    }
+  } while (c != 'q');
 
+  */
 
   game_loop();
   

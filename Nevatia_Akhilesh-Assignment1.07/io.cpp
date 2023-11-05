@@ -92,7 +92,14 @@ static void io_print_message_queue(uint32_t y, uint32_t x)
   io_tail = NULL;
 }
 
-
+/**************************************************************************
+ * Compares trainer distances from the PC according to the rival distance *
+ * map.  This gives the approximate distance that the PC must travel to   *
+ * get to the trainer (doesn't account for crossing buildings).  This is  *
+ * not the distance from the NPC to the PC unless the NPC is a rival.     *
+ *                                                                        *
+ * Not a bug.                                                             *
+ **************************************************************************/
 static int compare_trainer_distance(const void *v1, const void *v2)
 {
   const character *const *c1 = (const character * const *) v1;
@@ -456,28 +463,29 @@ uint32_t move_pc_dir(uint32_t input, pair_t dest)
 
 void io_teleport_world(pair_t dest)
 {
+  /* mvscanw documentation is unclear about return values.  I believe *
+   * that the return value works the same way as scanf, but instead   *
+   * of counting on that, we'll initialize x and y to out of bounds   *
+   * values and accept their updates only if in range.                */
+  int x = INT_MAX, y = INT_MAX;
 
-int x = INT_MAX, y = INT_MAX;
-char formatX[] = "%d";
-char formatY[] = "%d";
+  char x_arr[256] = "%d";
+  char y_arr[256] = "%d";
   
-world.cur_map->cmap[world.pc.pos[dim_y]][world.pc.pos[dim_x]] = NULL;
+  world.cur_map->cmap[world.pc.pos[dim_y]][world.pc.pos[dim_x]] = NULL;
 
-echo();
-curs_set(1);
-
-do {
-    mvprintw(0, 0, "x b/w [-200,200]:");
+  echo();
+  curs_set(1);
+  do {
+    mvprintw(0, 0, "Enter x [-200, 200]:           ");
     refresh();
-    mvscanw(0, 21, formatX, &x);
-} while (x < -200 || x > 200);
-
-do {
-    mvprintw(0, 0, "y b/w [-200,200]");
+    mvscanw(0, 21, x_arr, &x);
+  } while (x < -200 || x > 200);
+  do {
+    mvprintw(0, 0, "Enter y [-200, 200]:          ");
     refresh();
-    mvscanw(0, 21, formatY, &y);
-} while (y < -200 || y > 200);
-
+    mvscanw(0, 21, y_arr, &y);
+  } while (y < -200 || y > 200);
 
   refresh();
   noecho();
@@ -573,7 +581,11 @@ void io_handle_input(pair_t dest)
       turn_not_consumed = 0;
       break;    
     case 'q':
-
+      /* Demonstrate use of the message queue.  You can use this for *
+       * printf()-style debugging (though gdb is probably a better   *
+       * option.  Not that it matters, but using this command will   *
+       * waste a turn.  Set turn_not_consumed to 1 and you should be *
+       * able to figure out why I did it that way.                   */
       io_queue_message("This is the first message.");
       io_queue_message("Since there are multiple messages, "
                        "you will see \"more\" prompts.");
@@ -594,7 +606,15 @@ void io_handle_input(pair_t dest)
       turn_not_consumed = 0;
       break;
     default:
-     
+      /* Also not in the spec.  It's not always easy to figure out what *
+       * key code corresponds with a given keystroke.  Print out any    *
+       * unhandled key here.  Not only does it give a visual error      *
+       * indicator, but it also gives an integer value that can be used *
+       * for that key in this (or other) switch statements.  Printed in *
+       * octal, with the leading zero, because ncurses.h lists codes in *
+       * octal, thus allowing us to do reverse lookups.  If a key has a *
+       * name defined in the header, you can use the name here, else    *
+       * you can directly use the octal value.                          */
       mvprintw(0, 0, "Unbound key: %#o ", key);
       turn_not_consumed = 1;
     }
