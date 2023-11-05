@@ -104,6 +104,6 @@ extern pokemon_stats_db pokemon_stats[6553];
 extern stats_db stats[9];
 extern pokemon_types_db pokemon_types[1676];
 
-void db_parse(bool print);
+void db_parse(bool print, const char *filename);
 
 #endif

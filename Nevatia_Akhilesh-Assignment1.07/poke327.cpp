@@ -1140,6 +1140,13 @@ void usage(char *s)
 
 int main(int argc, char *argv[])
 {
+
+  if (argc != 2) {
+    printf("Usage: %s [pokemon | moves | pokemon_moves | pokemon_species | experience | type_names | pokemon_stats | stats | pokemon_types]\n", argv[0]);
+    return 1;
+}
+
+  
   struct timeval tv;
   uint32_t seed;
   int long_arg;
@@ -1148,7 +1155,7 @@ int main(int argc, char *argv[])
   //  int x, y;
   int i;
 
-  db_parse(false);
+  db_parse(true,argv[1]);
   return 0;
   
   do_seed = 1;

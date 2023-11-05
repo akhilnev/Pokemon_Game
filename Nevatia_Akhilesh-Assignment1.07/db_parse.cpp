@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <sys/stat.h>
 #include <climits>
-
+#include <iostream>
 #include "db_parse.h"
 
 static char *next_token(char *start, char delim)
@@ -25,15 +25,7 @@ static char *next_token(char *start, char delim)
   return start;
 }
 
-/* We can't print a "null integer", so it takes an annoying amount of code *
- * to check for INT_MAX and then print "", otherwise print the integer     *
- * value.  This function converts ints to strings only if they do not have *
- * the value INT_MAX and returns the string, so no extra work needs to be  *
- * done where we print (except calling this function).                     *
- *                                                                         *
- * Needs an internal array because arguments are processed before the      *
- * function call, so if we returned the same pointer over and over again,  *
- * we'd print a bunch of whatever the final value processed was.           */
+
 static const char *i2s(int i)
 {
   static int next = 0;
@@ -62,7 +54,7 @@ pokemon_stats_db pokemon_stats[6553];
 stats_db stats[9];
 pokemon_types_db pokemon_types[1676];
 
-void db_parse(bool print)
+void db_parse(bool print, const char *filename)
 {
   FILE *f;
   char line[800];
@@ -88,8 +80,7 @@ void db_parse(bool print)
   if (!prefix && !stat("/share/cs327", &buf)) {
     prefix = strdup("/share/cs327/pokedex/pokedex/data/csv/");
   } else if (!prefix) {
-    // Your third location goes here, if needed.
-    // prefix is freed later, so be sure you malloc it
+    
   }
 
   //No error checking on file load from here on out.  Missing
@@ -120,7 +111,7 @@ void db_parse(bool print)
 
   fclose(f);
   
-  if (print) {
+  if (print && (strcmp(filename,"pokemon")==0)){
     f = fopen("pokemon.csv", "w");
     for (i = 1; i < 1093; i++) {
       fprintf(f, "%s,%s,%s,%s,%s,%s,%s,%s\n",
@@ -134,6 +125,12 @@ void db_parse(bool print)
               i2s(pokemon[i].is_default));
     }
     fclose(f);
+
+    for (i = 1; i < 1093; i++) {
+        std::cout << i2s(pokemon[i].id) << "," << pokemon[i].identifier << "," << i2s(pokemon[i].species_id) << ","
+                  << i2s(pokemon[i].height) << "," << i2s(pokemon[i].weight) << "," << i2s(pokemon[i].base_experience) << ","
+                  << i2s(pokemon[i].order) << "," << i2s(pokemon[i].is_default) << std::endl;
+    }
   }
 
 
@@ -181,7 +178,7 @@ void db_parse(bool print)
 
   fclose(f);
   
-  if (print) {
+  if (print && (strcmp(filename,"moves")==0)) {
     f = fopen("moves.csv", "w");
     for (i = 1; i < 845; i++) {
       fprintf(f, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
@@ -202,6 +199,16 @@ void db_parse(bool print)
               i2s(moves[i].super_contest_effect_id));
     }
     fclose(f);
+
+    for (i = 1; i < 845; i++) {
+        std::cout << i2s(moves[i].id) << "," << moves[i].identifier << "," << i2s(moves[i].generation_id) << ","
+                  << i2s(moves[i].type_id) << "," << i2s(moves[i].power) << "," << i2s(moves[i].pp) << ","
+                  << i2s(moves[i].accuracy) << "," << i2s(moves[i].priority) << ","
+                  << i2s(moves[i].target_id) << "," << i2s(moves[i].damage_class_id) << ","
+                  << i2s(moves[i].effect_id) << "," << i2s(moves[i].effect_chance) << ","
+                  << i2s(moves[i].contest_type_id) << "," << i2s(moves[i].contest_effect_id) << ","
+                  << i2s(moves[i].super_contest_effect_id) << std::endl;
+    }
   }
 
   prefix = (char *) realloc(prefix,
@@ -233,7 +240,7 @@ void db_parse(bool print)
 
   fclose(f);
 
-  if (print) {
+  if (print && (strcmp(filename,"pokemon_moves")==0)) {
     f = fopen("pokemon_moves.csv", "w");
     for (i = 1; i < 528239; i++) {
       fprintf(f, "%s,%s,%s,%s,%s,%s\n",
@@ -245,6 +252,12 @@ void db_parse(bool print)
               i2s(pokemon_moves[i].order));
     }
     fclose(f);
+
+    for (i = 1; i < 528239; i++) {
+        std::cout << i2s(pokemon_moves[i].pokemon_id) << "," << i2s(pokemon_moves[i].version_group_id) << ","
+                  << i2s(pokemon_moves[i].move_id) << "," << i2s(pokemon_moves[i].pokemon_move_method_id) << ","
+                  << i2s(pokemon_moves[i].level) << "," << i2s(pokemon_moves[i].order) << std::endl;
+    }
   }
 
   prefix = (char *) realloc(prefix,
@@ -302,7 +315,7 @@ void db_parse(bool print)
 
   fclose(f);
 
-  if (print) {
+  if (print && (strcmp(filename,"pokemon_species")==0)) {
     f = fopen("pokemon_species.csv", "w");
     for (i = 1; i < 899; i++) {
       fprintf(f,
@@ -329,6 +342,20 @@ void db_parse(bool print)
               i2s(species[i].conquest_order));
     }
     fclose(f);
+
+    for (i = 1; i < 899; i++) {
+        std::cout << i2s(species[i].id) << "," << species[i].identifier << "," << i2s(species[i].generation_id) << ","
+                  << i2s(species[i].evolves_from_species_id) << "," << i2s(species[i].evolution_chain_id) << ","
+                  << i2s(species[i].color_id) << "," << i2s(species[i].shape_id) << ","
+                  << i2s(species[i].habitat_id) << "," << i2s(species[i].gender_rate) << ","
+                  << i2s(species[i].capture_rate) << "," << i2s(species[i].base_happiness) << ","
+                  << i2s(species[i].is_baby) << "," << i2s(species[i].hatch_counter) << ","
+                  << i2s(species[i].has_gender_differences) << "," << i2s(species[i].growth_rate_id) << ","
+                  << i2s(species[i].forms_switchable) << "," << i2s(species[i].is_legendary) << ","
+                  << i2s(species[i].is_mythical) << "," << i2s(species[i].order) << ","
+                  << i2s(species[i].conquest_order) << std::endl;
+    }
+
   }
 
 
@@ -353,16 +380,22 @@ void db_parse(bool print)
 
   fclose(f);
 
-  if (print) {
+if (print && (strcmp(filename, "experience") == 0)) {
     f = fopen("experience.csv", "w");
     for (i = 1; i < 601; i++) {
-      fprintf(f, "%s,%s,%s\n",
-              i2s(experience[i].growth_rate_id),
-              i2s(experience[i].level),
-              i2s(experience[i].experience));
+        fprintf(f, "%s,%s,%s\n",
+                i2s(experience[i].growth_rate_id),
+                i2s(experience[i].level),
+                i2s(experience[i].experience));
     }
     fclose(f);
-  }
+
+    for (i = 1; i < 601; i++) {
+        std::cout << i2s(experience[i].growth_rate_id) << "," << i2s(experience[i].level) << ","
+                  << i2s(experience[i].experience) << std::endl;
+    }
+}
+
 
   prefix = (char *) realloc(prefix, prefix_len + strlen("type_names.csv") + 1);
   strcpy(prefix + prefix_len, "type_names.csv");
@@ -396,13 +429,18 @@ void db_parse(bool print)
 
   fclose(f);
 
-  if (print) {
+if (print && (strcmp(filename, "type_names") == 0)) {
     f = fopen("type_names.csv", "w");
     for (i = 1; i < 19; i++) {
-      fprintf(f, "%s\n", types[i]);
+        fprintf(f, "%s\n", types[i]);
     }
     fclose(f);
-  }
+
+    for (i = 1; i < 19; i++) {
+        std::cout << types[i] << std::endl;
+    }
+}
+
 
   prefix = (char *) realloc(prefix,
                             prefix_len + strlen("pokemon_stats.csv") + 1);
@@ -428,17 +466,23 @@ void db_parse(bool print)
 
   fclose(f);
 
-  if (print) {
+if (print && (strcmp(filename, "pokemon_stats") == 0)) {
     f = fopen("pokemon_stats.csv", "w");
     for (i = 1; i < 6553; i++) {
-      fprintf(f, "%s,%s,%s,%s\n",
-              i2s(pokemon_stats[i].pokemon_id),
-              i2s(pokemon_stats[i].stat_id),
-              i2s(pokemon_stats[i].base_stat),
-              i2s(pokemon_stats[i].effort));
+        fprintf(f, "%s,%s,%s,%s\n",
+                i2s(pokemon_stats[i].pokemon_id),
+                i2s(pokemon_stats[i].stat_id),
+                i2s(pokemon_stats[i].base_stat),
+                i2s(pokemon_stats[i].effort));
     }
     fclose(f);
-  }
+
+    for (i = 1; i < 6553; i++) {
+        std::cout << i2s(pokemon_stats[i].pokemon_id) << "," << i2s(pokemon_stats[i].stat_id) << ","
+                  << i2s(pokemon_stats[i].base_stat) << "," << i2s(pokemon_stats[i].effort) << std::endl;
+    }
+}
+
   
   prefix = (char *) realloc(prefix, prefix_len + strlen("stats.csv") + 1);
   strcpy(prefix + prefix_len, "stats.csv");
@@ -464,18 +508,24 @@ void db_parse(bool print)
 
   fclose(f);
   
-  if (print) {
+if (print && (strcmp(filename, "stats") == 0)) {
     f = fopen("stats.csv", "w");
     for (i = 1; i < 9; i++) {
-      fprintf(f, "%s,%s,%s,%s,%s\n",
-              i2s(stats[i].id),
-              i2s(stats[i].damage_class_id),
-              stats[i].identifier,
-              i2s(stats[i].is_battle_only),
-              i2s(stats[i].game_index));
+        fprintf(f, "%s,%s,%s,%s,%s\n",
+                i2s(stats[i].id),
+                i2s(stats[i].damage_class_id),
+                stats[i].identifier,
+                i2s(stats[i].is_battle_only),
+                i2s(stats[i].game_index));
     }
     fclose(f);
-  }
+
+    for (i = 1; i < 9; i++) {
+        std::cout << i2s(stats[i].id) << "," << i2s(stats[i].damage_class_id) << "," << stats[i].identifier << ","
+                  << i2s(stats[i].is_battle_only) << "," << i2s(stats[i].game_index) << std::endl;
+    }
+}
+
 
   prefix = (char *) realloc(prefix,
                             prefix_len + strlen("pokemon_types.csv") + 1);
@@ -499,16 +549,22 @@ void db_parse(bool print)
 
   fclose(f);
   
-  if (print) {
+if (print && (strcmp(filename, "pokemon_types") == 0)) {
     f = fopen("pokemon_types.csv", "w");
     for (i = 1; i < 1676; i++) {
-      fprintf(f, "%s,%s,%s\n",
-              i2s(pokemon_types[i].pokemon_id),
-              i2s(pokemon_types[i].type_id),
-              i2s(pokemon_types[i].slot));
+        fprintf(f, "%s,%s,%s\n",
+                i2s(pokemon_types[i].pokemon_id),
+                i2s(pokemon_types[i].type_id),
+                i2s(pokemon_types[i].slot));
     }
     fclose(f);
-  }
+
+    for (i = 1; i < 1676; i++) {
+        std::cout << i2s(pokemon_types[i].pokemon_id) << "," << i2s(pokemon_types[i].type_id) << ","
+                  << i2s(pokemon_types[i].slot) << std::endl;
+    }
+}
+
 
 
   free(prefix);

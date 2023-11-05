@@ -4,7 +4,7 @@
 #include "poke327.h"
 #include "io.h"
 
-/* Just to make the following table fit in 80 columns */
+/* Just to make the following table fit in 80 columns k*/
 #define IM INT_MAX
 /* Swimmers are not allowed to move onto paths in general, and this *
  * is governed by the swimmer movement code.  However, paths over   *
