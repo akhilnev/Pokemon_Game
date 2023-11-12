@@ -5,6 +5,7 @@
 #include "db_parse.h"
 #include "poke327.h"
 
+//works
 static bool operator<(const levelup_move &f, const levelup_move &s)
 {
   return ((f.level < s.level) || ((f.level == s.level) && f.move < s.move));

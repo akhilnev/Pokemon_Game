@@ -23,6 +23,7 @@ typedef struct queue_node {
 
 world_t world;
 
+//works
 pair_t all_dirs[8] = {
   { -1, -1 },
   { -1,  0 },

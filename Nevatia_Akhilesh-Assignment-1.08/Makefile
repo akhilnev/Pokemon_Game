@@ -5,7 +5,7 @@ RM = rm -f
 
 
 CFLAGS = -Wall -Werror -ggdb -funroll-loops 
-CXXFLAGS = -Wall -Werror -ggdb -funroll-loops -std=c++11  # Added -std=c++11
+CXXFLAGS = -Wall -Werror -ggdb -funroll-loops -std=c++11  
 
 LDFLAGS = -lncurses
 

@@ -3,6 +3,7 @@
 
 #include <vector>
 
+//works
 struct pokemon_db {
   int id;
   char identifier[30];

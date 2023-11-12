@@ -636,6 +636,7 @@ io_queue_message("%s's moves include: %s, %s",
 delete p;
 }
 
+//works
 void io_choose_starter()
 {
   class pokemon *choice[3];

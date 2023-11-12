@@ -1,6 +1,7 @@
 #ifndef PAIR_H
 # define PAIR_H
 
+//works
 typedef enum dim {
   dim_x,
   dim_y,

@@ -1,6 +1,7 @@
 #ifndef POKEMON_H
 # define POKEMON_H
 
+//works
 enum pokemon_stat {
   stat_hp,
   stat_atk,

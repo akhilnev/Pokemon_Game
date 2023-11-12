@@ -5,6 +5,8 @@
 
 # include "pair.h"
 
+
+//works
 typedef enum __attribute__ ((__packed__)) movement_type {
   move_hiker,
   move_rival,

@@ -5,6 +5,7 @@
 
 #include "heap.h"
 
+//works
 struct heap_node {
   heap_node_t *next;
   heap_node_t *prev;
