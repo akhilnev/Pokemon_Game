@@ -10,8 +10,7 @@
 #include "pokemon.h"
 
 typedef struct io_message {
-  /* Will print " --more-- " at end of line when another message follows. *
-   * Leave 10 extra spaces for that.                                      */
+
   char msg[71];
   struct io_message *next;
 } io_message_t;
@@ -83,7 +82,7 @@ static void io_print_message_queue(uint32_t y, uint32_t x)
     io_head = io_head->next;
     if (io_head) {
       attron(COLOR_PAIR(COLOR_CYAN));
-      mvprintw(y, x + 70, "%10s", " --more-- ");
+      mvprintw(y, x + 70, "%10s", " -otherInfo/stats- ");
       attroff(COLOR_PAIR(COLOR_CYAN));
       refresh();
       getch();
@@ -584,11 +583,7 @@ void io_handle_input(pair_t dest)
       turn_not_consumed = 0;
       break;    
     case 'q':
-      /* Demonstrate use of the message queue.  You can use this for *
-       * printf()-style debugging (though gdb is probably a better   *
-       * option.  Not that it matters, but using this command will   *
-       * waste a turn.  Set turn_not_consumed to 1 and you should be *
-       * able to figure out why I did it that way.                   */
+
       io_queue_message("This is the first message.");
       io_queue_message("Since there are multiple messages, "
                        "you will see \"more\" prompts.");
@@ -609,15 +604,7 @@ void io_handle_input(pair_t dest)
       turn_not_consumed = 0;
       break;
     default:
-      /* Also not in the spec.  It's not always easy to figure out what *
-       * key code corresponds with a given keystroke.  Print out any    *
-       * unhandled key here.  Not only does it give a visual error      *
-       * indicator, but it also gives an integer value that can be used *
-       * for that key in this (or other) switch statements.  Printed in *
-       * octal, with the leading zero, because ncurses.h lists codes in *
-       * octal, thus allowing us to do reverse lookups.  If a key has a *
-       * name defined in the header, you can use the name here, else    *
-       * you can directly use the octal value.                          */
+
       mvprintw(0, 0, "Unbound key: %#o ", key);
       turn_not_consumed = 1;
     }
@@ -627,20 +614,26 @@ void io_handle_input(pair_t dest)
 
 void io_encounter_pokemon()
 {
-  pokemon *p;
 
-  p = new pokemon();
+  pokemon* p = new pokemon();
 
-  io_queue_message("%s%s%s: HP:%d ATK:%d DEF:%d SPATK:%d SPDEF:%d SPEED:%d %s",
-                   p->is_shiny() ? "*" : "", p->get_species(),
-                   p->is_shiny() ? "*" : "", p->get_hp(), p->get_atk(),
-                   p->get_def(), p->get_spatk(), p->get_spdef(),
-                   p->get_speed(), p->get_gender_string());
-  io_queue_message("%s's moves: %s %s", p->get_species(),
-                   p->get_move(0), p->get_move(1));
+io_queue_message("Meet your new companion:");
+io_queue_message("  %s%s%s",
+    p->is_shiny() ? "*" : "",
+    p->get_species(),
+    p->is_shiny() ? "*" : "");
+io_queue_message("  - HP:    %d", p->get_hp());
+io_queue_message("  - ATKK:   %d", p->get_atk());
+io_queue_message("  - DEF:   %d", p->get_def());
+io_queue_message("  - SPATK: %d", p->get_spatk());
+io_queue_message("  - SPDEF: %d", p->get_spdef());
+io_queue_message("  - Speed: %d", p->get_speed());
+io_queue_message("  - Gender: %s", p->get_gender_string());
+io_queue_message("%s's moves include: %s, %s",
+    p->get_species(), p->get_move(0), p->get_move(1));
 
-  // Later on, don't delete if captured
-  delete p;
+// Later on, don't delete if captured
+delete p;
 }
 
 void io_choose_starter()
@@ -656,11 +649,11 @@ void io_choose_starter()
   echo();
   curs_set(1);
   do {
-    mvprintw( 4, 20, "Before you are three Pokemon, each of");
-    mvprintw( 5, 20, "which wants absolutely nothing more");
-    mvprintw( 6, 20, "than to be your best buddy forever.");
-    mvprintw( 8, 20, "Unfortunately for them, you may only");
-    mvprintw( 9, 20, "pick one.  Choose wisely.");
+     mvprintw(4, 20, "Before you are presented with three Pokemon,");
+    mvprintw(5, 20, "each eagerly awaiting the chance to become");
+    mvprintw(6, 20, "your lifelong companion.");
+    mvprintw(8, 20, "Regrettably, you may only choose one.");
+    mvprintw(9, 20, "Please Choose only after thinking.");
     mvprintw(11, 20, "   1) %s", choice[0]->get_species());
     mvprintw(12, 20, "   2) %s", choice[1]->get_species());
     mvprintw(13, 20, "   3) %s", choice[2]->get_species());

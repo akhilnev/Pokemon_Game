@@ -17,11 +17,11 @@ enum pokemon_gender {
 
 class pokemon {
  private:
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-private-field"
+// #pragma GCC diagnostic push
+// #pragma GCC diagnostic ignored "-Wunused-private-field"
   int level;
   int pokemon_index;
-#pragma GCC diagnostic pop
+// #pragma GCC diagnostic pop
   int move_index[4];
   int pokemon_species_index;
   int IV[6];
