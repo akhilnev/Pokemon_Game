@@ -1,1 +1,12 @@
 1. Notes to TA :
+- To get output of parsed desired file please first make, then do: ./poke327 <filename>
+- if there are lesser than 2 parameters in the execution we return a message asking you to write on of the filenames listed
+- if you enter a file name which does not exist there will be no output generated
+-  Code gives you the output on the terminal and also makes and attaches a file to the code with the same output for the desired csv 
+- I HAVE MADE SURE NOT TO ATTACH ANY DATABASE IN MY SUBMISSION AND ONLY THE NECCESARY FILES
+
+About 1.07:
+In this project, we parse multiple data files describing Pokémon and their moves. The database for these files is accessible on Pyrite under /share/cs327/pokedex. It is crucial not to include the database in your submission, as it significantly impacts the submission size and poses challenges for sharing and system limits. You can copy the database to a local location using scp without including it in your source tree.
+The program should look in specific locations for the database, including /share/cs327 and $HOME/.poke327/. It's essential to check these locations even if you have a local copy elsewhere. The goal is to enable the Teaching Assistants to test without modifying your sources. The CSV files are situated under pokedex/pokedex/data/csv/ and include various files such as pokemon.csv, moves.csv, pokemon_moves.csv, pokemon_species.csv, experience.csv, and others.
+When parsing each file, create a structure or class to hold the data type and an array to store all the data. Utilize INT_MAX as a placeholder for empty cells in the CSV files. The program should be modified to accept a single command-line parameter, such as pokemon, moves, pokemon_moves, and others. Upon parsing the specified file, the program should print its contents to the standard output and exit without initializing curses.
+All new code should be written in C++, and it's critical to adhere to not including the database within your submission. The project emphasizes file parsing, data structure creation, and command-line parsing without including the database with your solution.
