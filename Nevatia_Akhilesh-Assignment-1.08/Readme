@@ -1,0 +1,8 @@
+Message to the TA's ( Running the assignment and checkpoints):
+-Please do "make" to run the code and "make clean" to remove previously run code, then ./poke327 to get output
+-Start by choosing a pokemon for the PC aka you
+-Trainers tell us which pokemons they have, and going on tall grace you can discover Random pokemon with information about their stats!
+
+
+More about the Assignment:
+This assignment involves loading parsed data files containing details on creating Pokémon into a game. The focus is on implementing the ability to encounter Pokémon while simplifying the mechanics of the Pokémon main series games. When navigating tall grass, each move the player makes has a chance to encounter a Pokémon. The Pokémon's species, level, and moveset are determined based on certain rules. The assignment also covers factors such as Pokémon gender, shininess, and leveling up, providing simplified formulas for these mechanics. A placeholder function for the battle and capture sequence is introduced, with the intention to print Pokémon details and pause for user input. The assignment concludes by outlining the creation of an interface for the player to choose three randomly generated level 1 Pokémon at the game's start, and NPC trainers are given Pokémon based on specified generation rules. 
