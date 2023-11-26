@@ -1167,6 +1167,9 @@ void io_handle_input(pair_t dest)
     case 'B':
       io_bag(&world.pc);
       turn_not_consumed = 1;
+      clear();
+      io_display();
+      refresh();
       break;
     case 'p':
       /* Teleport the PC to a random place in the map.              */
