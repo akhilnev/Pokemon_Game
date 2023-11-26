@@ -1,7 +1,3 @@
-COMS S 327: Programming Assignment 9
-
-Author: Siddhant Jaju
-
 Title: Pokemon Battles 
 
 Description: This is the ninth assignment based on the Pokemon game. It is a continuation of the previous assignment, where we loaded the database with our 
