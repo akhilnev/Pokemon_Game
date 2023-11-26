@@ -416,9 +416,10 @@ int pokemon_selection(pc *p){
 
 void io_bag(pc *p) {
   clear();
-  mvprintw(0, 0, "Revive(1): %d", p->revive);
-  mvprintw(1,0, "Potion(2): %d", p->potion);
-  mvprintw(2, 0, "Pokeball: %d", p->pokeball);
+  mvprintw(0, 0, "Press Revive (option 1 to revive): %d", p->revive);
+  mvprintw(1,0, "Press Potion (option 2 to use potion): %d", p->potion);
+  mvprintw(2, 0, "Pokeballs available: %d", p->pokeball);
+  mvprintw(21, 0, "Press ESC to leave bag ");
   refresh();
   int pI = 0;
     while (1) {
@@ -705,6 +706,7 @@ void io_bag_pokemon_battle(pc *p, poke *pp) {
     int pI = 0;
     while (1) {
         switch (getch()) {
+
             case 27: // 'ESC' key
                 return; // Exit the function
 
@@ -736,10 +738,19 @@ void io_bag_pokemon_battle(pc *p, poke *pp) {
 
             case '3':
                 clear();
+                if(p->pokemon_count >= 6){
+                  mvprintw(0, 0, "You have too many pokemon cannot catch, wasted a pokeball");
+                  p->pokeball--;
+                  return;
+                }
+                if((p->pokeball) > 0){
                 mvprintw(0, 0, "You have caught a %s", pp->name);
                 p->poke_list[p->pokemon_count] = *pp;
                 p->pokemon_count++;
                 p->pokeball--;
+                }else{
+                  mvprintw(0, 0, "No Pokeball available");
+                }
                 return; // Exit the function
 
                 break;
