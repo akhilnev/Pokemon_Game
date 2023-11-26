@@ -8,6 +8,7 @@
 #include <string>
 #include <climits>
 
+//
 typedef struct pokemon {
     int id;
  //   std::string identifier;

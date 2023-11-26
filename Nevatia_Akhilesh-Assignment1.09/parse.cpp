@@ -10,6 +10,7 @@
 
 #include "parse.h"
 
+//
 void pokemon_parser(std::vector<pokemon_t*> *pokemon) {
 
     

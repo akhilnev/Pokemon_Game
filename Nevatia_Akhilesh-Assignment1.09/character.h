@@ -1,6 +1,5 @@
 #ifndef CHARACTER_H
 # define CHARACTER_H
-
 # include <stdint.h>
 
 # include "pair.h"

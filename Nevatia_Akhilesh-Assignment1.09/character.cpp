@@ -1,5 +1,4 @@
 #include <limits.h>
-
 #include "character.h"
 #include "poke327.h"
 #include "io.h"

@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <limits.h>
 # include <vector>
-
 #include "parse.h"
 #include "io.h"
 #include "character.h"
