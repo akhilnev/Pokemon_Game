@@ -366,8 +366,8 @@ static void io_list_trainers()
 
 void io_pokemart()
 {
-  mvprintw(0, 0, "Welcome to the Pokemart.  Could I interest you in some Pokeballs?");
-  world.pc.revive = 2;
+  mvprintw(0, 0, "Welcome to the Pokemart. You have been stocked up!");
+world.pc.revive = 2;
 world.pc.potion = 2;
 world.pc.pokeball = 10;
   refresh();
@@ -376,7 +376,7 @@ world.pc.pokeball = 10;
 
 void io_pokemon_center()
 {
-  mvprintw(0, 0, "Welcome to the Pokemon Center.  How can Nurse Joy assist you?");
+  mvprintw(0, 0, "Welcome to the Pokemon Center. Your Pokemons have been healed :)");
     for(int i = 0; i < world.pc.pokemon_count; i++) {
     world.pc.poke_list[i].currentHP = world.pc.poke_list[i].health;
   }
@@ -384,7 +384,7 @@ void io_pokemon_center()
   getch();
 }
 
-int pokemon_selection(pc *p) {
+int pokemon_selection(pc *p){
   clear();
   for(int i = 0; i < p->pokemon_count; i++ ) {
       mvprintw(i, 0, "%s %d/%d", p->poke_list[i].name, p->poke_list[i].currentHP, p->poke_list[i].health);
@@ -696,56 +696,61 @@ void io_teleport_world(pair_t dest)
 }
 
 
-
 void io_bag_pokemon_battle(pc *p, poke *pp) {
-
-  clear();
-  mvprintw(0, 0, "Revive(1): %d", p->revive);
-  mvprintw(1,0, "Potion(2): %d", p->potion);
-  mvprintw(2, 0, "Pokeball(3): %d", p->pokeball);
-  refresh();
-  int pI = 0;
-    while (1) {
-    switch (getch()) {
-    case 27:
-      return;
-
-      break;
-    case '1':
-     pI = pokemon_selection(p);
-      p->poke_list[pI].currentHP = p->poke_list[pI].health / 2;
-      p->revive--;
-      clear();
-      mvprintw(0, 0, "Revive(1): %d", p->revive);
-      mvprintw(1,0, "Potion(2): %d", p->potion);
-      mvprintw(2, 0, "Pokeball: %d", p->pokeball);
-      refresh();
-      break;
-
-    case '2':
-     pI = pokemon_selection(p);
-      p->poke_list[pI].currentHP = std::min(p->poke_list[pI].currentHP + 20, p->poke_list[pI].health);
-      p->potion--;
-      clear();
-      mvprintw(0, 0, "Revive(1): %d", p->revive);
-      mvprintw(1,0, "Potion(2): %d", p->potion);
-      mvprintw(2, 0, "Pokeball: %d", p->pokeball);
-      refresh();
-      break;
-
-    case '3':
     clear();
-    mvprintw(0,0, "You have caught a %s", pp->name);
-    p->poke_list[p->pokemon_count] = *pp;
-    p->pokemon_count++;
-    p->pokeball--;
-    return;
-    break;
+    mvprintw(0, 0, "Revive(1): %d", p->revive);
+    mvprintw(1, 0, "Potion(2): %d", p->potion);
+    mvprintw(2, 0, "Pokeball(3): %d", p->pokeball);
+    refresh();
+
+    int pI = 0;
+    while (1) {
+        switch (getch()) {
+            case 27: // 'ESC' key
+                return; // Exit the function
+
+            case '1':
+                pI = pokemon_selection(p);
+                p->poke_list[pI].currentHP = p->poke_list[pI].health / 2;
+                if((p->revive)!=0){
+                    p->revive--;
+                }
+                clear();
+                mvprintw(0, 0, "Revive(1): %d", p->revive);
+                mvprintw(1, 0, "Potion(2): %d", p->potion);
+                mvprintw(2, 0, "Pokeball: %d", p->pokeball);
+                refresh();
+                break;
+
+            case '2':
+                pI = pokemon_selection(p);
+                p->poke_list[pI].currentHP = std::min(p->poke_list[pI].currentHP + 20, p->poke_list[pI].health);
+                if((p->potion)!=0){
+                    p->potion--;
+                }
+                clear();
+                mvprintw(0, 0, "Revive(1): %d", p->revive);
+                mvprintw(1, 0, "Potion(2): %d", p->potion);
+                mvprintw(2, 0, "Pokeball: %d", p->pokeball);
+                refresh();
+                break;
+
+            case '3':
+                clear();
+                mvprintw(0, 0, "You have caught a %s", pp->name);
+                p->poke_list[p->pokemon_count] = *pp;
+                p->pokemon_count++;
+                p->pokeball--;
+                return; // Exit the function
+
+                break;
+        }
     }
-
-  } 
-
 }
+
+
+
+
 
 
 void attack_round(pc *p, poke *pp, int pI, int moveSelection) {
