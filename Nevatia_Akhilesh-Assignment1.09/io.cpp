@@ -415,6 +415,7 @@ int pokemon_selection(pc *p){
 }
 
 void io_bag(pc *p) {
+  
   clear();
   mvprintw(0, 0, "Press Revive (option 1 to revive): %d", p->revive);
   mvprintw(1,0, "Press Potion (option 2 to use potion): %d", p->potion);
@@ -426,7 +427,6 @@ void io_bag(pc *p) {
     switch (getch()) {
     case 27:
       return;
-
       break;
     case '1':
      pI = pokemon_selection(p);
@@ -454,7 +454,11 @@ void io_bag(pc *p) {
 
   } 
 
+  return;
+
 }
+
+
 
 
 void io_battle(character *aggressor, character *defender)
@@ -486,7 +490,7 @@ void io_battle(character *aggressor, character *defender)
     n->mtype = move_wander;
   }
   clear();
-  mvprintw(0, 0, "Aww, how'd you get so strong?  You and your pokemon must share a special bond!");
+  mvprintw(0, 0, "Welcome to the battle!");
 
 
   mvprintw(2, 0, "%s(lv %d) hp: %d/%d", p->poke_list[pI].name, p->poke_list[pI].level, p->poke_list[pI].currentHP, p->poke_list[pI].health);
@@ -561,6 +565,7 @@ void io_battle(character *aggressor, character *defender)
     break;
 
     case '4':
+    mvprintw(0, 0, "Please select which pokemon you want to use:"); 
     pI = pokemon_selection(p);
     clear();
       mvprintw(2, 0, "%s(lv %d) hp: %d/%d", p->poke_list[pI].name, p->poke_list[pI].level, p->poke_list[pI].currentHP, p->poke_list[pI].health);
@@ -583,6 +588,10 @@ void io_battle(character *aggressor, character *defender)
 
   return;
 }
+
+
+
+
 
 uint32_t move_pc_dir(uint32_t input, pair_t dest)
 {
@@ -709,6 +718,10 @@ void io_bag_pokemon_battle(pc *p, poke *pp) {
 
             case 27: // 'ESC' key
                 return; // Exit the function
+                break;
+            
+            case 'Q':
+                break;
 
             case '1':
                 pI = pokemon_selection(p);
@@ -740,22 +753,28 @@ void io_bag_pokemon_battle(pc *p, poke *pp) {
                 clear();
                 if(p->pokemon_count >= 6){
                   mvprintw(0, 0, "You have too many pokemon cannot catch, wasted a pokeball");
+                  refresh();
                   p->pokeball--;
                   return;
                 }
                 if((p->pokeball) > 0){
                 mvprintw(0, 0, "You have caught a %s", pp->name);
+                refresh();
+                usleep(1000000);
                 p->poke_list[p->pokemon_count] = *pp;
                 p->pokemon_count++;
                 p->pokeball--;
                 }else{
                   mvprintw(0, 0, "No Pokeball available");
+                  refresh();
                 }
                 return; // Exit the function
 
                 break;
         }
     }
+
+    return;
 }
 
 
@@ -1006,8 +1025,8 @@ void attack_selection(pc *p, poke *pp, int pI) {
       return;
       break;
     case '4':
-      return;
       attack_round(p, pp, pI, 3);
+      return;
       break;
     }
 
@@ -1041,7 +1060,7 @@ void pokemon_battle(pc *p, poke *pp) {
     switch (getch()) {
     case 27:
       return;
-    break;
+      break;
     case '1':
       attack_selection(p, pp, pI);
       clear();

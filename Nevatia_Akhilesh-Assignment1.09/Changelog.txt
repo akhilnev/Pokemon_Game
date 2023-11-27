@@ -1,3 +1,9 @@
+commit e90b78fe0dc69bf411cc312cd77e424ea2edde18
+Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
+Date:   Sun Nov 26 16:03:29 2023 -0600
+
+     Adding changes to the io.cpp and 'B' method
+
 commit ed3fd883f5b2280d1822037048ff333e68d9e2a3
 Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
 Date:   Sun Nov 26 15:55:36 2023 -0600
@@ -18,13 +24,13 @@ Date:   Sun Nov 26 14:58:53 2023 -0600
 
 commit 9d38a86f98e10d36027130719cefe2eb8d7f1fd3
 Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
-Date:   Sun Nov 26 14:42:09 2023 -0600
+Date:   Sun Nov 19 14:42:09 2023 -0600
 
      Adding changes in the poke center and poke mart, battle conditions and escape conditions, re running battle and checking all requirements
 
 commit 13bdb131aeec00bc8068fcb97e6e58c0dcc35a63
 Author: Akhilesh Nevatia <akhilesh.nevatia@gmail.com>
-Date:   Sun Nov 26 13:31:29 2023 -0600
+Date:   Sun Nov 19 13:31:29 2023 -0600
 
     Adding my partially working code from the pyrite server to git
 
